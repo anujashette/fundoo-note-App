@@ -1,0 +1,123 @@
+{
+    "user": {
+        "email": "anuja11@gmail.com",
+        "firstname": "anuja",
+        "lastname": "shette",
+        "password": "123456"
+    },
+    "userinvalid": {
+        "email": "shette.anujagmail",
+        "firstname": "",
+        "lastname": "shette",
+        "password": "123456"
+    },
+    "userexist": {
+        "email": "anuja1@gmail.com",
+        "firstname": "anuja",
+        "lastname": "shette",
+        "password": "123456"
+    },
+    "userlogin": {
+        "email": "shette.anuja@gmail.com",
+        "password": "abc@123"
+    },
+    "invalidinput": {
+        "email": "shette.anujagmail",
+        "password": ""
+    },
+    "userincorrect": {
+        "email": "anujashette@gmail.com",
+        "password": "123456"
+    },
+    "headers": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNWQ0NDc3OWQ5NmFkYzIwM2ExYWI1ZWVkIn0sImlhdCI6MTU2NDk5NDAzOSwiZXhwIjoxNTY1MDgwNDM5fQ.6AfviBUWc_cHJiTpa89ALZaxFlht9-4NoyBJ-ULlNjM"
+    },
+    "invalidtoken": {
+        "headers": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNWQ0MTJkNzVlZTFkNjEy"
+        }
+    },
+    "forgetpassvalid": {
+        "email": "shette.anuja@gmail.com"
+    },
+    "forgetpassinvalid": {
+        "email": "shetteanuja"
+    },
+    "forgetpassno": {
+        "email": "noeamilid@gmail.com"
+    },
+    "reset": {
+        "password": "abc@123"
+    },
+    "resetpassinvalid": {
+        "password": "123"
+    },
+    "addnote": {
+        "title": "anuja note unique1",
+        "description": "note desc from fundoo"
+    },
+    "addexistnote": {
+        "title": "anuja note 3333",
+        "description": "note desc from fundoo"
+    },
+    "addemptytitle": {
+        "title": "",
+        "description": ""
+    },
+    "updateTitle": {
+        "title": "anuja note 122",
+        "noteId": "5d447ae096adc203a1ab5eef"
+    },
+    "notitle": {
+        "title": "anuja note 2222",
+        "noteId": "InvalidId"
+    },
+    "updateemptytitle": {
+        "title": "",
+        "noteId": "5d447ae096adc203a1ab5eef"
+    },
+    "updatedesc": {
+        "description": "anuja note 122",
+        "noteId": "5d447ae096adc203a1ab5eef"
+    },
+    "nodesc": {
+        "description": "anuja note 2222",
+        "noteId": "InvalidId"
+    },
+    "updatecolor": {
+        "notecolor": "black",
+        "noteId": "5d447ae096adc203a1ab5eef"
+    },
+    "nocolor": {
+        "notecolor": "white",
+        "noteId": "InvalidId"
+    },
+    "updateremind": {
+        "reminder": "4/8/2019 T12:04",
+        "noteId": "5d447ae096adc203a1ab5eef"
+    },
+    "noremind": {
+        "color": "4/8/2019 T12:04",
+        "noteId": "InvalidId"
+    },
+    "unsetremind": {
+        "reminder": "4/8/2019 T12:04",
+        "noteId": "5d447ae096adc203a1ab5eef"
+    },
+    "nounsetremind": {
+        "color": "4/8/2019 T12:04",
+        "noteId": "InvalidId"
+    },
+    "noteId":{
+        "noteId":"5d447ae096adc203a1ab5eef"
+    },
+    "nonoteId":{
+        "noteId":"InvalidId"
+    },
+    "delnoteId":{
+        "noteId":"5d47e80a480a50096eb4a3c8"
+    },
+    "delnonoteId":{
+        "noteId":"InvalidId"
+    }
+}

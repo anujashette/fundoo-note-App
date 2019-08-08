@@ -1,0 +1,21 @@
+/******************************************************************************
+ *  Purpose:  Mongoose services connect to database.
+ *
+ *  @file    Mongoose.connect.js
+ *  @author  Anuja Shette
+ *  @version 1.0
+ *  @since   21-07-2019
+ *
+ ******************************************************************************/
+require('dotenv').config()
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.mongourl , {
+    useNewUrlParser: true,
+    useCreateIndex:true
+}).then(() => {
+    console.log("Successfully connected to the database");    
+}).catch(err => {
+    console.log('Could not connect to the database. Exiting now...', err);
+    process.exit();
+});
