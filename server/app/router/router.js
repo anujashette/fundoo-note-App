@@ -76,7 +76,13 @@ appRouter.get('/note/readarchivenotes', authObj.isAuthorized, noteController.rea
 appRouter.get('/note/readtrashnotes', authObj.isAuthorized, noteController.readTrashController)    
 
 //  Read reminder notes router
-appRouter.get('/note/readremindernotes', authObj.isAuthorized, noteController.readRemindController) 
+appRouter.get('/note/readremindernotes', authObj.isAuthorized, noteController.readRemindController)
+
+//  Update note label router
+appRouter.put('/note/updatenotelabel', authObj.isAuthorized, noteController.addLabelNoteController)  
+
+//  delete note label router
+appRouter.put('/note/deletenotelabel', authObj.isAuthorized, noteController.deleteLabelNoteController)  
 
 //  create label router
 appRouter.post('/label/createlabel', authObj.isAuthorized, labelController.addLabelController) 
@@ -89,5 +95,7 @@ appRouter.put('/label/updatelabel', authObj.isAuthorized, labelController.update
 
 //  Delete label router
 appRouter.delete('/label/deletelabel', authObj.isAuthorized, labelController.deleteLabelController)
+
+
 
 module.exports = appRouter;

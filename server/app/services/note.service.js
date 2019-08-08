@@ -44,10 +44,10 @@ NoteService.prototype.addNoteServ = async (addField) => {
  ****************************************************************************************************
  */
 NoteService.prototype.readNoteServ = async (param) => {
-    console.log('Read Note Service ===>',param.noteId)
+    console.log('Read Note Service ===>', param.noteId)
 
     let readResponse = {}
-    param.field = {}
+    param.field = {'trash': false,'archive': false}
     let getNote = await noteModelObj.readNote(param)
 
     if (getNote.error) {
@@ -209,7 +209,7 @@ NoteService.prototype.updateArchiveServ = async (updateArchive) => {
         let field = { archive: !status.readData[0].archive }
         updatedArchive = await noteModelObj.updateNote(field, updateArchive.noteId)
     }
-    else if(status.readData[0].trash == true){
+    else if (status.readData[0].trash == true) {
         updateArchiveRes.status = false
         updateArchiveRes.error = 'already in trash'
         return updateArchiveRes
@@ -243,7 +243,7 @@ NoteService.prototype.updateTrashServ = async (updateTrash) => {
         let field = { trash: !status.readData[0].trash }
         updatedTrash = await noteModelObj.updateNote(field, updateTrash.noteId)
     }
-    else if(status.readData[0].archive == true){
+    else if (status.readData[0].archive == true) {
         updateTrashRes.status = false
         updateTrashRes.error = 'already in archive'
         return updateTrashRes
@@ -269,11 +269,18 @@ NoteService.prototype.updateTrashServ = async (updateTrash) => {
  */
 NoteService.prototype.deleteNoteServ = async (deleteNote) => {
     console.log('Delete Note Service ===>', deleteNote)
-
+    let status = await noteModelObj.readNote(deleteNote)
+    let deletedNote = ''
     let deleteResponde = {}
-    let deletedNote = await noteModelObj.deleteNote(deleteNote.noteId)
+    if (!status.error && status.readData[0].trash == true)
+        deletedNote = await noteModelObj.deleteNote(deleteNote.noteId)
 
-    if (deletedNote.error) {
+    else if (status.readData[0].trash == false) {
+        deleteResponde.status = false
+        deleteResponde.error = 'Note is not in trash'
+        return deleteResponde
+    }
+    else if (deletedNote.error || status.error) {
         deleteResponde.status = false
         deleteResponde.error = deletedNote.error
         return deleteResponde
@@ -293,10 +300,10 @@ NoteService.prototype.deleteNoteServ = async (deleteNote) => {
  ****************************************************************************************************
  */
 NoteService.prototype.readArchiveServ = async (readParam) => {
-    console.log('Read archive notes Service ===>',readParam.userId)
+    console.log('Read archive notes Service ===>', readParam.userId)
 
     let readArchiveRes = {}
-    readParam.field = {'archive' : true}
+    readParam.field = { 'archive': true }
     let getArchiveNotes = await noteModelObj.readNote(readParam)
 
     if (getArchiveNotes.error) {
@@ -319,10 +326,10 @@ NoteService.prototype.readArchiveServ = async (readParam) => {
  ****************************************************************************************************
  */
 NoteService.prototype.readTrashServ = async (readParam) => {
-    console.log('Read trash notes Service ===>',readParam.userId)
+    console.log('Read trash notes Service ===>', readParam.userId)
 
     let readTrashRes = {}
-    readParam.field = {}
+    readParam.field = {'trash': true}
     let getTrashNotes = await noteModelObj.readNote(readParam)
 
     if (getTrashNotes.error) {
@@ -345,10 +352,10 @@ NoteService.prototype.readTrashServ = async (readParam) => {
  ****************************************************************************************************
  */
 NoteService.prototype.readRemindServ = async (readParam) => {
-    console.log('Read reminder notes Service ===>',readParam.userId)
+    console.log('Read reminder notes Service ===>', readParam.userId)
 
     let readRemindRes = {}
-    readParam.field = {"reminder":{$ne:[]}}
+    readParam.field = { "reminder": { $ne: [] } }
     let getRemindNotes = await noteModelObj.readNote(readParam)
 
     if (getRemindNotes.error) {
@@ -364,6 +371,58 @@ NoteService.prototype.readRemindServ = async (readParam) => {
     return readRemindRes
 }
 
+
+/****************************************************************************************************
+ * @param updateLabel
+ * @description pass note reminder and id to model after callback service receives updated data or error 
+ * and send back to updateRemindController
+ ****************************************************************************************************
+ */
+NoteService.prototype.updateLabelServ = async (updateLabel) => {
+    console.log('Update label Service ===>', updateLabel)
+
+    let field = { $addToSet: { notelabel: updateLabel.notelabel } }
+    let updateLabelRes = {}
+    let updatedLabel = await noteModelObj.updateNote(field, updateLabel.noteId)
+
+    if (updatedLabel.error) {
+        updateLabelRes.status = false
+        updateLabelRes.error = updatedLabel.error
+        return updateLabelRes
+    }
+    console.log('data ===>', updatedLabel)
+    updateLabelRes.status = true
+    updateLabelRes.message = 'Note label updated successfully'
+    updateLabelRes.data = updatedLabel
+
+    return updateLabelRes
+}
+
+/****************************************************************************************************
+ * @param deleteLabel
+ * @description pass note reminder and id to model after callback service receives updated data or error 
+ * and send back to updateRemindController
+ ****************************************************************************************************
+ */
+NoteService.prototype.deleteLabelServ = async (deleteLabel) => {
+    console.log('Delete label Service ===>', deleteLabel)
+
+    let field = { $pull: { notelabel: deleteLabel.labelId } }
+    let deleteLabelRes = {}
+    let deletedLabel = await noteModelObj.updateNote(field, deleteLabel.noteId)
+
+    if (deletedLabel.error) {
+        deleteLabelRes.status = false
+        deleteLabelRes.error = deletedLabel.error
+        return deleteLabelRes
+    }
+    console.log('data ===>', deletedLabel)
+    deleteLabelRes.status = true
+    deleteLabelRes.message = 'Note label deleted successfully'
+    deleteLabelRes.data = deletedLabel
+
+    return deleteLabelRes
+}
 /****************************************************************************************************
  * @description NoteService object created and exports to controller
  ****************************************************************************************************

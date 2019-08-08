@@ -19,8 +19,13 @@ const labelSchema = mongoose.Schema({
     },
     label: {
         type : String
+    },
+    isdeleted:{
+        type : Boolean,
+        default : false 
     }
-},{
+},  
+{
     timestamps : true
 })
 

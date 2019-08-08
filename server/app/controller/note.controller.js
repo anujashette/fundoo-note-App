@@ -331,6 +331,54 @@ NoteController.prototype.readRemindController = async (req, res) => {
     }
 }
 
+
+/****************************************************************************************************
+ * @param req get 
+ * @param res send response to user
+ * @description addLabelToNoteController passing data to services and send response to user
+ ****************************************************************************************************
+ */
+NoteController.prototype.addLabelNoteController = async (req, res) => {
+    try {
+        console.log('add Label To Note Controller Contrller ===>',)
+        labelParam = {
+            notelabel : req.body.notelabel,
+            noteId: req.body.noteId
+        }
+        console.log('note label===>',labelParam)
+        let labelNoteRes = await noteServObj.updateLabelServ(labelParam)
+        return res.status(labelNoteRes.status ? 200 : 422).send(labelNoteRes)
+    }
+    catch (err) {
+        log.logger.error('Add labels to Notes==>', err)
+        return res.status(400).json({ 'error': err })
+    }
+}
+
+
+/****************************************************************************************************
+ * @param req get 
+ * @param res send response to user
+ * @description deleteLabelNoteController passing data to services and send response to user
+ ****************************************************************************************************
+ */
+NoteController.prototype.deleteLabelNoteController = async (req, res) => {
+    try {
+        console.log('add Label To Note Controller Contrller ===>',)
+        var labelParam = {
+            labelId : req.body.labelId,
+            noteId: req.body.noteId
+        }
+        console.log('delete note label===>',labelParam)
+        let labelNoteRes = await noteServObj.deleteLabelServ(labelParam)
+        return res.status(labelNoteRes.status ? 200 : 422).send(labelNoteRes)
+    }
+    catch (err) {
+        log.logger.error('Delete labels to Notes==>', err)
+        return res.status(400).json({ 'error': err })
+    }
+}
+
 /****************************************************************************************************
  * @description NoteController object created and exports to router
  ****************************************************************************************************

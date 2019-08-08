@@ -12,6 +12,7 @@ const mongoose = require('mongoose')
 
  mongoose.connect(process.env.mongourl,{
         useNewUrlParser: true,
+        useFindAndModify:false,
         useCreateIndex:true
     });
  

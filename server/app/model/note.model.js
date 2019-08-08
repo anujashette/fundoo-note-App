@@ -17,7 +17,7 @@ const noteSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         require: [true, 'User Id required'],
-        ref: 'userSchema'
+        ref: 'user'
     },
     title: {
         type: String,
@@ -41,6 +41,10 @@ const noteSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    notelabel: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'labels'
+    }]
 },
     {
         timestamps: true
@@ -62,24 +66,21 @@ function Note() { }
 Note.prototype.createNote = async (addField, userId) => {
     try {
         console.log('Create Note Model ===>', addField)
-        data = await note.find({ 'title': addField.title })
-        if (data == '') {
-            let addNote = new note({
-                userId: userId,
-                title: addField.title,
-                description: addField.description,
-                reminder : addField.reminder,
-                notecolor : addField.notecolor,
-                archive : addField.archive
-            })
+        // data = await note.find({ 'title': addField.title })
 
-            saveNote = await addNote.save()
-            return saveNote
-        }
-        else {
-            error = { error: 'Use unique title name' }
-            return error
-        }
+        let addNote = new note({
+            userId: userId,
+            title: addField.title,
+            description: addField.description,
+            reminder: addField.reminder,
+            notecolor: addField.notecolor,
+            archive: addField.archive,
+            notelabel: addField.notelabel
+        })
+
+        saveNote = await addNote.save()
+        return saveNote
+
     }
     catch (err) {
         log.logger.error('Create Note error==>', err)
@@ -97,7 +98,7 @@ Note.prototype.readNote = async (param) => {
     try {
         console.log('Read Note Model ===>', param)
         if (param.noteId !== undefined)
-            readData = await note.find({ '_id': param.noteId })
+            readData = await note.find({ '_id': param.noteId }).populate('notelabel')
         else if (param.searchKey) {
             readData = await note.find
                 ({
@@ -111,12 +112,12 @@ Note.prototype.readNote = async (param) => {
                 })
         }
         else {
-            console.log('userId===>',param.userId)
-            totalCount = await note.countDocuments({$and:[{"userId":param.userId},param.field]})
-            readData = await note.find({$and:[{"userId":param.userId},param.field]}, {}, param.query)
+            console.log('userId===>', param)
+            totalCount = await note.countDocuments({ $and: [{ "userId": param.userId }, param.field] })
+            readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
             var totalPages = parseInt(Math.ceil(totalCount / parseInt(param.size)))
         }
-        if (readData != '') {
+        if (readData != '') { 
             data = { readData: readData, totalPages: totalPages }
             return data
         }
@@ -131,7 +132,6 @@ Note.prototype.readNote = async (param) => {
         return error
     }
 }
-
 
 /*****************************************************************************************************
  * @param updateField
