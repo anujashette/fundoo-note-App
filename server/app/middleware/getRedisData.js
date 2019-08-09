@@ -11,9 +11,10 @@
  * @param {*} token
  * @description Get token from redis cache 
  */
-exports.getCacheToken = (id) => {
+exports.getCacheData = (id) => {
+    console.log('id==>',id)
     return new Promise((resolve, reject) => {
-        client.get('user' + id, (err, reply) => {
+        client.get(id, (err, reply) => {
             if (err) {
                 console.log("error getting in redis token-->", err);
                 reject(err)

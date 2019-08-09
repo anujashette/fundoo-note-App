@@ -30,7 +30,7 @@
         "password": "123456"
     },
     "headers": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNWQ0NDc3OWQ5NmFkYzIwM2ExYWI1ZWVkIn0sImlhdCI6MTU2NDk5NDAzOSwiZXhwIjoxNTY1MDgwNDM5fQ.6AfviBUWc_cHJiTpa89ALZaxFlht9-4NoyBJ-ULlNjM"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNWQ0MTJkNzVlZTFkNjEyZjY5YmNhMDk5In0sImlhdCI6MTU2NTMzNDQ2NCwiZXhwIjoxNTY1NDIwODY0fQ.r0UWh8fmG-NbXnLDAXubsjRX_8y1nwQdTE63wqYgk48"
     },
     "invalidtoken": {
         "headers": {
@@ -119,5 +119,25 @@
     },
     "delnonoteId":{
         "noteId":"InvalidId"
+    },
+    "addlabel":{
+        "label":"new label testing"
+    },
+    "emptylabel":{
+        "label":""
+    },
+    "updatelabel":{
+        "labelId":"5d4d7bf0d54d00457a170aa2",
+        "label":"new label testing"
+    },
+    "wrongLabelId":{
+        "labelId":"5643535",
+        "label":"new label testing"
+    },
+    "deleteLabel":{
+        "labelId":"5d4d7cc33908ad467f6a207c"
+    },
+    "wrongLabel":{
+        "labelId":"5643535"
     }
 }

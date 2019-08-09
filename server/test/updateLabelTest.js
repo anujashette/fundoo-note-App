@@ -12,12 +12,12 @@ filePath = path.join(`${__dirname}/data.json`);
 var data = fs.readFileSync(filePath)
 data = JSON.parse(data)
 
-describe('Note api testing', () => {
+describe('Label api testing', () => {
 
-    it('Add note testing', (done) => {
+    it('Update label testing', (done) => {
       chai.request(server)
-          .post('/note/addnote')
-          .send(data.addnote)
+          .put('/label/updatelabel')
+          .send(data.updatelabel)
           .set(data.headers)
           .end((err, res) => {
                 res.should.have.status(200);
@@ -25,21 +25,10 @@ describe('Note api testing', () => {
           });
     });
 
-    // it('Add existing note testing', (done) => {
-    //     chai.request(server)
-    //         .post('/note/addnote')
-    //         .send(data.addexistnote)
-    //         .set(data.headers)
-    //         .end((err, res) => {
-    //               res.should.have.status(422);
-    //           done();
-    //         });
-    //   });
-
-      it('Add empty title note testing', (done) => {
+    it('Update empty label testing', (done) => {
         chai.request(server)
-            .post('/note/addnote')
-            .send(data.addemptytitle)
+            .put('/label/updatelabel')
+            .send(data.emptylabel)
             .set(data.headers)
             .end((err, res) => {
                   res.should.have.status(400);
@@ -47,6 +36,15 @@ describe('Note api testing', () => {
             });
       });
 
-      
+      it('Update with wrong label id testing', (done) => {
+        chai.request(server)
+            .put('/label/updatelabel')
+            .send(data.wrongLabelId)
+            .set(data.headers)
+            .end((err, res) => {
+                  res.should.have.status(422);
+              done();
+            });
+      });
 });
 

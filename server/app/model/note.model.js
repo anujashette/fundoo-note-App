@@ -79,8 +79,9 @@ Note.prototype.createNote = async (addField, userId) => {
         })
 
         saveNote = await addNote.save()
-        return saveNote
+        // await client.set('note' + saveNote.id, JSON.stringify(saveNote), redis.print)
 
+        return saveNote
     }
     catch (err) {
         log.logger.error('Create Note error==>', err)
@@ -97,8 +98,10 @@ Note.prototype.createNote = async (addField, userId) => {
 Note.prototype.readNote = async (param) => {
     try {
         console.log('Read Note Model ===>', param)
-        if (param.noteId !== undefined)
+        if (param.noteId !== undefined) {
             readData = await note.find({ '_id': param.noteId }).populate('notelabel')
+            // await client.set('readBynote' + param.noteId, JSON.stringify(readData), redis.print)
+        }
         else if (param.searchKey) {
             readData = await note.find
                 ({
@@ -107,17 +110,20 @@ Note.prototype.readNote = async (param) => {
                             { 'title': { $regex: param.searchKey, $options: 'i' } },
                             { 'description': { $regex: param.searchKey, $options: 'i' } },
                             { 'notecolor': { $regex: param.searchKey, $options: 'i' } },
-                            { 'reminder': { $regex: param.searchKey, $options: 'i' } }
+                            { 'reminder': { $regex: param.searchKey, $options: 'i' } },
                         ]
-                })
+                }).populate('notelabel')
         }
         else {
             console.log('userId===>', param)
             totalCount = await note.countDocuments({ $and: [{ "userId": param.userId }, param.field] })
             readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
+            console.log('read stringify in model====================================', JSON.stringify(param.field))
+
+            await client.set('readAllBy'+JSON.stringify(param.field), JSON.stringify(readData), redis.print)
             var totalPages = parseInt(Math.ceil(totalCount / parseInt(param.size)))
         }
-        if (readData != '') { 
+        if (readData != '') {
             data = { readData: readData, totalPages: totalPages }
             return data
         }
@@ -142,8 +148,12 @@ Note.prototype.readNote = async (param) => {
 Note.prototype.updateNote = async (updateField, noteId) => {
     try {
         console.log('Update note Model ===>', updateField, noteId)
-
+        client.flushdb( function (err, succeeded) {
+            console.log(succeeded); // will be true if successfull
+        });
+        
         updateData = await note.findOneAndUpdate({ '_id': noteId }, updateField)
+        await client.set('updateAllBy'+JSON.stringify(updateField), JSON.stringify(updateData), redis.print)
 
         if (!updateData) {
             error = { error: 'Note is not updated' }

@@ -333,7 +333,7 @@ NoteController.prototype.readRemindController = async (req, res) => {
 
 
 /****************************************************************************************************
- * @param req get 
+ * @param req get labelId, noteId
  * @param res send response to user
  * @description addLabelToNoteController passing data to services and send response to user
  ****************************************************************************************************
@@ -357,7 +357,7 @@ NoteController.prototype.addLabelNoteController = async (req, res) => {
 
 
 /****************************************************************************************************
- * @param req get 
+ * @param req get labelId, noteId
  * @param res send response to user
  * @description deleteLabelNoteController passing data to services and send response to user
  ****************************************************************************************************

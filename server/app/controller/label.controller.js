@@ -21,6 +21,13 @@ function LabelController() { }
  */
 LabelController.prototype.addLabelController = async (req, res) => {
     try {
+        req.check('label').not().isEmpty().withMessage('label is required')
+        error = req.validationErrors()
+
+        if (error) {
+            res.status(400).json({ 'message': error })
+        }
+        else {
             addParam = {
                 label: req.body.label,
                 userId: req.token.payload.id
@@ -30,7 +37,9 @@ LabelController.prototype.addLabelController = async (req, res) => {
              * @param addParam contains label name and userId
              */
             let addLabelRes = await labelServObj.addLabelServ(addParam)
-            return res.status(addLabelRes.status ? 200 : 422).send(addLabelRes)
+            if(addLabelRes.status)
+                return res.status( 200 ).send(addLabelRes)
+        }
     }
     catch (err) {
         log.logger.error('Create label==>', err)
@@ -46,15 +55,16 @@ LabelController.prototype.addLabelController = async (req, res) => {
  */
 LabelController.prototype.readLabelController = async (req, res) => {
     try {
-            readParam = {
-                userId: req.token.payload.id
-            }
-            console.log('Read label Contrller ===>')
-            /**
-             * @param addParam contains userId to find labels
-             */
-            let readLabelRes = await labelServObj.readLabelServ(readParam)
-            return res.status(readLabelRes.status ? 200 : 422).send(readLabelRes)
+        readParam = {
+            userId: req.token.payload.id
+        }
+        console.log('Read label Contrller ===>')
+        /**
+         * @param addParam contains userId to find labels
+         */
+        let readLabelRes = await labelServObj.readLabelServ(readParam)
+        if(readLabelRes.status)
+            return res.status( 200).send(readLabelRes)
     }
     catch (err) {
         log.logger.error('Read label==>', err)
@@ -70,9 +80,16 @@ LabelController.prototype.readLabelController = async (req, res) => {
  */
 LabelController.prototype.updateLabelController = async (req, res) => {
     try {
+        req.check('label').not().isEmpty().withMessage('label is required')
+        error = req.validationErrors()
+
+        if (error) {
+            res.status(400).json({ 'message': error })
+        }
+        else {
             updateParam = {
-                labelId : req.body.labelId,
-                label : req.body.label
+                labelId: req.body.labelId,
+                label: req.body.label
             }
             console.log('Update label Contrller ===>')
             /**
@@ -80,6 +97,7 @@ LabelController.prototype.updateLabelController = async (req, res) => {
              */
             let updateLabelRes = await labelServObj.updateLabelServ(updateParam)
             return res.status(updateLabelRes.status ? 200 : 422).send(updateLabelRes)
+        }
     }
     catch (err) {
         log.logger.error('update label==>', err)
@@ -95,15 +113,16 @@ LabelController.prototype.updateLabelController = async (req, res) => {
  */
 LabelController.prototype.deleteLabelController = async (req, res) => {
     try {
-            deleteParam = {
-                labelId : req.body.labelId
-            }
-            console.log('Delete label Contrller ===>')
-            /**
-             * @param deleteParam contains labelId to delete label
-             */
-            let deleteLabelRes = await labelServObj.deleteLabelServ(deleteParam)
-            return res.status(deleteLabelRes.status ? 200 : 422).send(deleteLabelRes)
+        deleteParam = {
+            labelId: req.body.labelId
+        }
+        console.log('Delete label Contrller ===>')
+        /**
+         * @param deleteParam contains labelId to delete label
+         */
+        let deleteLabelRes = await labelServObj.deleteLabelServ(deleteParam)
+        if(deleteLabelRes.status)
+            return res.status( 200 ).send(deleteLabelRes)
     }
     catch (err) {
         log.logger.error('delete label==>', err)

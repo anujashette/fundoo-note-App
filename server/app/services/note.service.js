@@ -9,7 +9,7 @@
  *
  ******************************************************************************/
 const noteModelObj = require('../model/note.model')
-
+const getData = require('../middleware/getRedisData')
 function NoteService() { }
 
 /****************************************************************************************************
@@ -44,22 +44,35 @@ NoteService.prototype.addNoteServ = async (addField) => {
  ****************************************************************************************************
  */
 NoteService.prototype.readNoteServ = async (param) => {
-    console.log('Read Note Service ===>', param.noteId)
+    console.log('Read Note Service ===>', param)
 
     let readResponse = {}
-    param.field = {'trash': false,'archive': false}
-    let getNote = await noteModelObj.readNote(param)
+    param.field = { 'trash': false, 'archive': false }
 
-    if (getNote.error) {
-        readResponse.status = false
-        readResponse.error = getNote.error
-        return readResponse
-    }
-    console.log('data read ===>', getNote)
+    // await getData.getCacheData('readAllBy' + JSON.stringify(param.field))
+    //     .then((reply) => {
+    //         console.log('reply--->', reply);
+    //         readResponse.data = JSON.parse(reply)
+    //     })
+    //     .catch((err) => {
+    //         console.log('reply error--->', err);
+    //     })
+
+    // if (!readResponse.data) {
+        let getNote = await noteModelObj.readNote(param)
+        console.log('data read ===>', getNote)
+
+        if (getNote.error) {
+            readResponse.status = false
+            readResponse.error = getNote.error
+            return readResponse
+        }
+        readResponse.data = getNote.readData
+        readResponse.totalpages = getNote.totalPages
+    // }
     readResponse.status = true
     readResponse.message = 'Note read successfully'
-    readResponse.data = getNote.readData
-    readResponse.totalpages = getNote.totalPages
+
     return readResponse
 }
 
@@ -329,7 +342,7 @@ NoteService.prototype.readTrashServ = async (readParam) => {
     console.log('Read trash notes Service ===>', readParam.userId)
 
     let readTrashRes = {}
-    readParam.field = {'trash': true}
+    readParam.field = { 'trash': true }
     let getTrashNotes = await noteModelObj.readNote(readParam)
 
     if (getTrashNotes.error) {
@@ -374,8 +387,8 @@ NoteService.prototype.readRemindServ = async (readParam) => {
 
 /****************************************************************************************************
  * @param updateLabel
- * @description pass note reminder and id to model after callback service receives updated data or error 
- * and send back to updateRemindController
+ * @description pass labelId and noteId to model after callback service receives updated data or error 
+ * and send back to addLabelToNoteController
  ****************************************************************************************************
  */
 NoteService.prototype.updateLabelServ = async (updateLabel) => {
@@ -400,8 +413,8 @@ NoteService.prototype.updateLabelServ = async (updateLabel) => {
 
 /****************************************************************************************************
  * @param deleteLabel
- * @description pass note reminder and id to model after callback service receives updated data or error 
- * and send back to updateRemindController
+ * @description pass labelId and noteId to model after callback service receives updated data or error 
+ * and send back to deleteLabelNoteController
  ****************************************************************************************************
  */
 NoteService.prototype.deleteLabelServ = async (deleteLabel) => {

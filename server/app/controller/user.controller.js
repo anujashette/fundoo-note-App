@@ -11,7 +11,6 @@ const s3 = require('../middleware/s3');
 const serviceObj = require('../services/user.service.js')
 const authObj = require('../middleware/authorization')
 const log = require('../logfile/logger')
-const getToken = require('../middleware/getRedisToken')
 
 /**
  * @param req get email,first name, last name, password
