@@ -14,7 +14,7 @@ describe('Test S3 Api', () => {
 
     it('s3 api test', (done) => {
       chai.request(server)
-          .post('/api/file/upload')
+          .put('/api/file/upload')
           .type('form')
           .set(data.headers)
           .attach('photos','/home/admin1/AnujaShette/FundooNotes/server/test/asset/nature1.jpg')
@@ -26,13 +26,23 @@ describe('Test S3 Api', () => {
 
     it('s3 api negative test', (done) => {
       chai.request(server)
-          .post('/api/file/upload')
+          .put('/api/file/upload')
           .type('form')
           .set(data.headers)
           .attach('photos','/home/admin1/AnujaShette/FundooNotes/server/test/asset/nature.exe')
           .end((err, res) => {
-                res.should.have.status(400);
+                res.should.have.status(500);
             done();
           });
     });
+    
+  it('token is invalid', (done) => {
+      chai.request(server)
+      .put('/api/file/upload')
+      .set(data.invalidtoken.headers)
+          .end((err, res) => {
+              res.should.have.status(422);
+              done();
+          });
+  });
 });

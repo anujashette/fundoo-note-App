@@ -39,6 +39,9 @@ appRouter.put('/user/reset', authObj.isAuthorized, userController.resetPass)
 //  Upload image and store in database
 appRouter.put('/api/file/upload', upload.single("photos"), authObj.isAuthorized, userController.uploadFile) 
 
+//  Notification router
+appRouter.put('/user/notificationlink', authObj.isAuthorized, userController.notifyLink)
+
 //  Create note router
 appRouter.post('/note/addnote', authObj.isAuthorized, noteController.addNoteController)                
 

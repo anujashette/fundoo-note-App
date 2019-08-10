@@ -24,5 +24,15 @@ describe('Label api testing', () => {
           });
     });
 
+  it('token is invalid', (done) => {
+      chai.request(server)
+      .get('/label/readlabel')
+      .set(data.invalidtoken.headers)
+          .end((err, res) => {
+              res.should.have.status(422);
+              done();
+          });
+  });
+
 });
 

@@ -394,7 +394,7 @@ NoteService.prototype.readRemindServ = async (readParam) => {
 NoteService.prototype.updateLabelServ = async (updateLabel) => {
     console.log('Update label Service ===>', updateLabel)
 
-    let field = { $addToSet: { notelabel: updateLabel.notelabel } }
+    let field = { $addToSet: { notelabel: updateLabel.labelId } }
     let updateLabelRes = {}
     let updatedLabel = await noteModelObj.updateNote(field, updateLabel.noteId)
 

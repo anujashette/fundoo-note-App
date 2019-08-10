@@ -46,4 +46,14 @@ describe('Note api testing', () => {
               done();
             });
       });
+  
+    it('token is invalid', (done) => {
+        chai.request(server)
+        .put('/note/updatetitle')
+        .set(data.invalidtoken.headers)
+            .end((err, res) => {
+                res.should.have.status(422);
+                done();
+            });
+        });
 });

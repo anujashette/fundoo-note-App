@@ -11,7 +11,7 @@ filePath = path.join(`${__dirname}/data.json`);chai.use(chaiHttp);
 var data = fs.readFileSync(filePath)
 data = JSON.parse(data)
 
-describe('Users', () => {
+describe('Users API testing', () => {
 
     it('User registration', (done) => {
       chai.request(server)

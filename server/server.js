@@ -20,7 +20,7 @@ const routes = require("./app/router/router.js");
 var expressValidator = require("express-validator");
 var app = express();
 const mongoose = require('./app/mongoose/mongoose.connect')
-redis = require('redis')
+ redis = require('redis')
 require('dotenv').config()
 
  /*
@@ -39,7 +39,7 @@ app.use('/',routes)
 /**
  * Redis client is created to store data in cache
  */
-client = redis.createClient();
+ client = redis.createClient();
 client.on("error", function (err) {
     console.log("Error " + err);
 });

@@ -78,14 +78,14 @@ Note.prototype.createNote = async (addField, userId) => {
             notelabel: addField.notelabel
         })
 
-        saveNote = await addNote.save()
+        let saveNote = await addNote.save()
         // await client.set('note' + saveNote.id, JSON.stringify(saveNote), redis.print)
 
         return saveNote
     }
     catch (err) {
         log.logger.error('Create Note error==>', err)
-        error = { error: 'Note already created' }
+        let error = { error: 'Note already created' }
         return error
     }
 }
@@ -97,13 +97,14 @@ Note.prototype.createNote = async (addField, userId) => {
  */
 Note.prototype.readNote = async (param) => {
     try {
+        var readData = {}
         console.log('Read Note Model ===>', param)
         if (param.noteId !== undefined) {
-            readData = await note.find({ '_id': param.noteId }).populate('notelabel')
+             readData = await note.find({ '_id': param.noteId }).populate('notelabel')
             // await client.set('readBynote' + param.noteId, JSON.stringify(readData), redis.print)
         }
         else if (param.searchKey) {
-            readData = await note.find
+             readData = await note.find
                 ({
                     $or:
                         [
@@ -116,25 +117,25 @@ Note.prototype.readNote = async (param) => {
         }
         else {
             console.log('userId===>', param)
-            totalCount = await note.countDocuments({ $and: [{ "userId": param.userId }, param.field] })
-            readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
+            var totalCount = await note.countDocuments({ $and: [{ "userId": param.userId }, param.field] })
+             readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
             console.log('read stringify in model====================================', JSON.stringify(param.field))
 
             await client.set('readAllBy'+JSON.stringify(param.field), JSON.stringify(readData), redis.print)
             var totalPages = parseInt(Math.ceil(totalCount / parseInt(param.size)))
         }
         if (readData != '') {
-            data = { readData: readData, totalPages: totalPages }
+            let data = { readData: readData, totalPages: totalPages }
             return data
         }
         else {
-            error = { error: 'Note is not found to read' }
+            let error = { error: 'Note is not found to read' }
             return error
         }
     }
     catch (err) {
         log.logger.error('Read Note error==>', err)
-        error = { error: 'Note Id is not found to read' }
+        let error = { error: 'Note Id is not found to read' }
         return error
     }
 }
@@ -152,11 +153,11 @@ Note.prototype.updateNote = async (updateField, noteId) => {
             console.log(succeeded); // will be true if successfull
         });
         
-        updateData = await note.findOneAndUpdate({ '_id': noteId }, updateField)
+        let updateData = await note.findOneAndUpdate({ '_id': noteId }, updateField)
         await client.set('updateAllBy'+JSON.stringify(updateField), JSON.stringify(updateData), redis.print)
 
         if (!updateData) {
-            error = { error: 'Note is not updated' }
+            let error = { error: 'Note is not updated' }
             return error
         }
         else {
@@ -165,7 +166,7 @@ Note.prototype.updateNote = async (updateField, noteId) => {
     }
     catch (err) {
         log.logger.error('Update Note error==>', err)
-        error = { error: 'Note Id is not found to update' }
+        let error = { error: 'Note Id is not found to update' }
         return error
     }
 }
@@ -186,13 +187,13 @@ Note.prototype.deleteNote = async (noteId) => {
             return deletedData
         }
         else {
-            error = { error: 'Note is not deleted' }
+            let error = { error: 'Note is not deleted' }
             return error
         }
     }
     catch (err) {
         log.logger.error('Delete Note error==>', err)
-        error = { error: 'Note Id is not found to delete' }
+        let error = { error: 'Note Id is not found to delete' }
         return error
     }
 }

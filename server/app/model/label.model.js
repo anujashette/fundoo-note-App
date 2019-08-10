@@ -46,7 +46,7 @@ Label.prototype.createLabel=async(addField)=>{
                 label : addField.label
             })
 
-            saveLabel = await addLabel.save()
+            var saveLabel = await addLabel.save()
             return saveLabel
     }
     catch (err) {
@@ -66,17 +66,17 @@ Label.prototype.readLabel=async(getField)=>{
         console.log('Read label model===>',getField);
         readData = await label.find({'userId': getField.userId})
         if (readData != '') {
-            data = { readData: readData }
+           var data = { readData: readData }
             return data
         }
         else {
-            error = { error: 'Label is not found to read' }
+           var error = { error: 'Label is not found to read' }
             return error
         }
     }
     catch(err){
         log.logger.error('Read label error==>', err)
-        error = { error: 'Label Id is not found to read' }
+       var error = { error: 'Label Id is not found to read' }
         return error
     }
 }
@@ -90,10 +90,10 @@ Label.prototype.updateLabel=async(updateField)=>{
     try {
         console.log('Update label Model ===>', updateField)
 
-        updateData = await label.findByIdAndUpdate({ '_id':updateField.labelId }, updateField.field)
+        var updateData = await label.findByIdAndUpdate({ '_id':updateField.labelId }, updateField.field)
 
         if (!updateData) {
-            error = { error: 'Label is not updated' }
+          var error = { error: 'Label is not updated' }
             return error
         }
         else {
@@ -102,11 +102,10 @@ Label.prototype.updateLabel=async(updateField)=>{
     }
     catch (err) {
         log.logger.error('Update label error==>', err)
-        error = { error: 'Label Id is not found to update' }
+       var error = { error: 'Label Id is not found to update' }
         return error
     }
 }
-
 
 /*****************************************************************************************************
  * @param deleteField
@@ -125,13 +124,13 @@ Label.prototype.deleteLabel=async(deleteField)=>{
             return deletedData
         }
         else {
-            error = { error: 'Label is not deleted' }
+           var error = { error: 'Label is not deleted' }
             return error
         }
     }
     catch (err) {
         log.logger.error('Delete Note error==>', err)
-        error = { error: 'Note Id is not found to delete' }
+       var error = { error: 'Note Id is not found to delete' }
         return error
     }
 

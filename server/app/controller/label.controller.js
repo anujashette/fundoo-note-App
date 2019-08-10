@@ -22,13 +22,13 @@ function LabelController() { }
 LabelController.prototype.addLabelController = async (req, res) => {
     try {
         req.check('label').not().isEmpty().withMessage('label is required')
-        error = req.validationErrors()
+        let error = req.validationErrors()
 
         if (error) {
             res.status(400).json({ 'message': error })
         }
         else {
-            addParam = {
+            let addParam = {
                 label: req.body.label,
                 userId: req.token.payload.id
             }
@@ -55,7 +55,7 @@ LabelController.prototype.addLabelController = async (req, res) => {
  */
 LabelController.prototype.readLabelController = async (req, res) => {
     try {
-        readParam = {
+        let readParam = {
             userId: req.token.payload.id
         }
         console.log('Read label Contrller ===>')
@@ -81,13 +81,13 @@ LabelController.prototype.readLabelController = async (req, res) => {
 LabelController.prototype.updateLabelController = async (req, res) => {
     try {
         req.check('label').not().isEmpty().withMessage('label is required')
-        error = req.validationErrors()
+        let error = req.validationErrors()
 
         if (error) {
             res.status(400).json({ 'message': error })
         }
         else {
-            updateParam = {
+            let updateParam = {
                 labelId: req.body.labelId,
                 label: req.body.label
             }
@@ -113,7 +113,7 @@ LabelController.prototype.updateLabelController = async (req, res) => {
  */
 LabelController.prototype.deleteLabelController = async (req, res) => {
     try {
-        deleteParam = {
+        let deleteParam = {
             labelId: req.body.labelId
         }
         console.log('Delete label Contrller ===>')

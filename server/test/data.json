@@ -1,6 +1,6 @@
 {
     "user": {
-        "email": "anuja11@gmail.com",
+        "email": "anuja18@gmail.com",
         "firstname": "anuja",
         "lastname": "shette",
         "password": "123456"
@@ -30,7 +30,7 @@
         "password": "123456"
     },
     "headers": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNWQ0MTJkNzVlZTFkNjEyZjY5YmNhMDk5In0sImlhdCI6MTU2NTMzNDQ2NCwiZXhwIjoxNTY1NDIwODY0fQ.r0UWh8fmG-NbXnLDAXubsjRX_8y1nwQdTE63wqYgk48"
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNWQ0MTJkNzVlZTFkNjEyZjY5YmNhMDk5In0sImlhdCI6MTU2NTQyNjc4MywiZXhwIjoxNTY1NTEzMTgzfQ.PktvF-tw-xT3_aSdZLBwv-oJs831_B7phDrA7U_XcIE"
     },
     "invalidtoken": {
         "headers": {
@@ -66,7 +66,7 @@
     },
     "updateTitle": {
         "title": "anuja note 122",
-        "noteId": "5d447ae096adc203a1ab5eef"
+        "noteId": "5d4d6f915d346b3259cce213"
     },
     "notitle": {
         "title": "anuja note 2222",
@@ -78,7 +78,7 @@
     },
     "updatedesc": {
         "description": "anuja note 122",
-        "noteId": "5d447ae096adc203a1ab5eef"
+        "noteId": "5d4d6f915d346b3259cce213"
     },
     "nodesc": {
         "description": "anuja note 2222",
@@ -86,7 +86,7 @@
     },
     "updatecolor": {
         "notecolor": "black",
-        "noteId": "5d447ae096adc203a1ab5eef"
+        "noteId": "5d4d6f915d346b3259cce213"
     },
     "nocolor": {
         "notecolor": "white",
@@ -94,7 +94,7 @@
     },
     "updateremind": {
         "reminder": "4/8/2019 T12:04",
-        "noteId": "5d447ae096adc203a1ab5eef"
+        "noteId": "5d4d6f915d346b3259cce213"
     },
     "noremind": {
         "color": "4/8/2019 T12:04",
@@ -102,20 +102,23 @@
     },
     "unsetremind": {
         "reminder": "4/8/2019 T12:04",
-        "noteId": "5d447ae096adc203a1ab5eef"
+        "noteId": "5d4d6f915d346b3259cce213"
     },
     "nounsetremind": {
         "color": "4/8/2019 T12:04",
         "noteId": "InvalidId"
     },
     "noteId":{
-        "noteId":"5d447ae096adc203a1ab5eef"
+        "noteId":"5d4d6f915d346b3259cce213"
+    },
+    "trashNoteId":{
+        "noteId":"5d4d702e4f591c333fe31798"
     },
     "nonoteId":{
         "noteId":"InvalidId"
     },
     "delnoteId":{
-        "noteId":"5d47e80a480a50096eb4a3c8"
+        "noteId":"5d4e5f862e6d9a38bec3f6cd"
     },
     "delnonoteId":{
         "noteId":"InvalidId"
@@ -135,9 +138,20 @@
         "label":"new label testing"
     },
     "deleteLabel":{
-        "labelId":"5d4d7cc33908ad467f6a207c"
+        "labelId":"5d4e5faf2e6d9a38bec3f6d1"
     },
     "wrongLabel":{
         "labelId":"5643535"
+    },
+    "addLabelToNote":{
+        "labelId":"5d4c26c15ba2060801ff60ef",
+        "noteId":"5d4c1909b02d86754891d21b"
+    },
+    "wrongLabelToNote":{
+        "labelId":"5d4c26c15ba2060801ff60ef",
+        "noteId":"5d4c16508a8bbd7193e4c69"
+    },
+    "updateNotifyLink":{
+        "notifylink":"updated firebase link testcase"
     }
 }

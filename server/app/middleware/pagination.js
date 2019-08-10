@@ -8,7 +8,7 @@ exports.pageList = (function (req,res) {
     var size = parseInt(req.query.size)
     var query = {}
     if (pageNo < 0 || pageNo === 0) {
-        response = { "error": true, "message": "invalid page number, should start with 1" };
+       var response = { "error": true, "message": "invalid page number, should start with 1" };
         return res.json(response)
     }
     query.skip = size * (pageNo - 1)

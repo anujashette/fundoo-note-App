@@ -20,7 +20,7 @@ const log = require('../logfile/logger')
  */
 exports.register = (async function (req, res) {
 
-    console.log('controller', req.body)
+    log.logger.info('controller', req.body)
 
     req.check('email').isEmail()
         .withMessage('Email is not valid')
@@ -49,7 +49,7 @@ exports.register = (async function (req, res) {
     else {
         try {
             let registerRes = await serviceObj.register(req.body)
-            console.log('register controller', registerRes)
+            log.logger.info('register controller', registerRes)
             return res.status(registerRes.status ? 200 : 422).send(registerRes)
         }
         catch (err) {
@@ -66,7 +66,7 @@ exports.register = (async function (req, res) {
  *              otherwise req.body pass to login services.
  */
 exports.login = (async function (req, res) {
-    console.log('login controller', req.body)
+    log.logger.info('login controller', req.body)
 
     req.check('email').isEmail()
         .withMessage('Email is not valid')
@@ -85,7 +85,7 @@ exports.login = (async function (req, res) {
     else {
         try {
             let loginRes = await serviceObj.login(req.body)
-            console.log('controller', loginRes)
+            log.logger.info('controller', loginRes)
             return res.status(loginRes.status ? 200 : 422).send(loginRes)
         }
         catch (err) {
@@ -104,7 +104,7 @@ exports.login = (async function (req, res) {
 exports.emailVerification = (async function (req, res) {
     try {
         let verifyRes = await serviceObj.emailVerification(req.token.payload.id)
-        console.log('verification controller==>', verifyRes)
+        log.logger.info('verification controller==>', verifyRes)
         if (verifyRes.status)
             return res.status(200).send(verifyRes)
     }
@@ -150,9 +150,9 @@ exports.forgetPass = async function (req, res) {
  *              otherwise after token verificaton req.body.password pass to services.
  */
 exports.resetPass = async (req, res) => {
-    console.log('pass', req.body)
+    log.logger.info('pass', req.body)
     var userToken = req.headers['token'];
-    console.log('header token', userToken)
+    log.logger.info('header token', userToken)
     req.check('password').not().isEmpty()
         .isLength({ min: 6 })
         .withMessage('Password having atleast 6 characters')
@@ -176,13 +176,13 @@ exports.resetPass = async (req, res) => {
 /**
  * @param req get image in form data
  * @param res send response to user
- * @description Forget password controller validate error if error occured send error
+ * @description UploadFile controller validate error if error occured send error
  *              otherwise image url pass to services.
  */
 exports.uploadFile = async (req, res, decoded) => {
 
     try {
-        console.log('token', req.token.payload.id)
+        log.logger.info('token', req.token.payload.id)
         const s3Client = s3.s3Client;
         const params = s3.uploadParams;
 
@@ -194,13 +194,38 @@ exports.uploadFile = async (req, res, decoded) => {
                 res.status(400).send(req.error);
             }
             let result = await serviceObj.storeUrl(data.Location, req.token.payload.id)
-            console.log(result)
+            log.logger.info(result)
             res.status(200).send(result);
         });
     }
     catch (err) {
-        console.log('----->',req.error)
+        log.logger.info('----->', req.error)
         log.logger.error('upload file controller:', err)
         return res.status(400).json({ 'message': 'Upload  image only(.jpeg,.jpg,.pgn) extensions.Try again' })
+    }
+}
+
+/**
+ * @param req get notification link
+ * @param res send response to user
+ * @description notifyLink controller validate error if error occured send error
+ *              otherwise firebase notification url pass to services.
+ */
+exports.notifyLink = (req, res) => {
+    try {
+        var notifyParam = {
+            userId: req.token.payload.id,
+            notifylink: req.body.notifylink
+        }
+        serviceObj.updateNotifyServ(notifyParam, (error, notifyRes) => {
+            if (error) {
+                return res.status(400).send(notifyRes)
+            }
+            return res.status(200).send(notifyRes)
+        })
+    } catch (err) {
+        log.logger.info('----->', req.error)
+        log.logger.error('upload file controller:', err)
+        return res.status(400).json({ 'message': 'User Id is wrong' })
     }
 }

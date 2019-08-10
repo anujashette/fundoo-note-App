@@ -43,6 +43,9 @@ const userSchema = mongoose.Schema({
     imageurl:{
         type: String,
     },
+    notificationlink:{
+        type : String
+    }
 }, {
         timestamps: true
     });
@@ -59,9 +62,9 @@ function User() { }
  * @description Registration model save all user data  
  */
 User.prototype.register = async (body) => {
-    console.log('register==>', body)
+    log.logger.info(body)
     try {
-        data = await userObj.find({ "email": body.email })
+        data = await userObj.find({ 'email': body.email })
         result = await saveData(data)
 
         async function saveData(data) {
@@ -75,7 +78,7 @@ User.prototype.register = async (body) => {
                 response.message = 'User already exist'
             }
             else {
-                console.log('model data==>', body)
+                log.logger.info(body)
                 try {
                     const newUser = new userObj                 //  User object created
                         ({
@@ -83,25 +86,29 @@ User.prototype.register = async (body) => {
                             firstname: body.firstname,
                             lastname: body.lastname,
                             password: body.password,
-                            confirmed: false
+                            confirmed: false,
+                            notificationlink: body.notifylink
                         });
 
                     let salt = await bcrypt.genSalt(10)
                     let hash = await bcrypt.hash(newUser.password, salt)//when fail to bcrypt its goes to catch
-                    console.log('hash password==>', hash)
+                    log.logger.info(hash)
+
                     newUser.password = hash
-                    console.log('bcerypted password==>', newUser.password)
+                    log.logger.info(newUser.password)
+
                     saveUser = await newUser.save()                     //when fail its goes to catch
-                    console.log(saveUser)                       
+                    log.logger.info(saveUser)     
+
                     emailToken = await genTokenObj.genToken(newUser)    //Generate token
                     url = process.env.emailurl + emailToken;
-                    console.log('url  ==>', url)
+                    log.logger.info(url)
+
                     mailObj.mailer(url, newUser.email)
                     response.message = 'Link is send to your email'
                     response.data = saveUser
                 }
                 catch (err) {
-                    console.log('err==>' + err)
                     log.logger.error('Error in register model', err)
                     return err
                 }
@@ -121,22 +128,21 @@ User.prototype.register = async (body) => {
  * @description Login model check wheather email and password is valid or not
  */
 User.prototype.login = async (body) => {
-    console.log('login model', body)
+    log.logger.info(body)
     var response = {
         status: true,
         message: '',
         data: ''
     }
     try {
-        console.log(body.email, '=====>body')
+       log.logger.info(body.email)
+       let data = await userObj.findOne({ "email": body.email })
 
-        data = await userObj.findOne({ "email": body.email })
-        console.log(data, '=====>data')
         if (data) {
-            isMatch = await bcrypt.compare(body.password, data.password)
+            let isMatch = await bcrypt.compare(body.password, data.password)
             if (isMatch) {
                 if (data.confirmed) {
-                    token = await genTokenObj.genToken(data)
+                    let token = await genTokenObj.genToken(data)
                    await client.set('user'+data.id,token,redis.print)    
 
                     response.message = 'Login successful'
@@ -177,8 +183,8 @@ User.prototype.emailVerification = async (id) => {
         data: ''
     }
     try {
-        result = await userObj.updateOne({ "_id": id }, { confirmed: true });
-        console.log('verification==>', result)
+        let result = await userObj.updateOne({ '_id': id }, { confirmed: true });
+        log.logger.info(result)
         response.message = 'Email is verified'
         return response
     }
@@ -200,13 +206,12 @@ User.prototype.forgetPass = async (body) => {
         data: ''
     }
     try {
-        data = await userObj.findOne({ "email": body.email })
-        console.log('Forget ==>',data)
+        let data = await userObj.findOne({ 'email': body.email })
+        log.logger.info(data)
         if (data) {
-            console.log('data found')
-            emailToken = await genTokenObj.genToken(data)
-            url = process.env.reserurl + emailToken;
-            console.log('url  ==>', url)
+            let emailToken = await genTokenObj.genToken(data)
+            let url = process.env.reserurl + emailToken;
+            log.logger.info( url)
             mailObj.mailer(url, data.email)
             response.message = 'Reset password link is send to your email'
         }
@@ -228,20 +233,18 @@ User.prototype.forgetPass = async (body) => {
  * @description Reset password model update password where id found
  */
 User.prototype.resetPass = async (id,changedPass) => {
-    console.log(changedPass)
-    console.log(id)
     var response = {
         status: true,
         message: '',
         data: ''
     }
     try {
-        console.log('changed pass==>',changedPass)
+        log.logger.info(changedPass)
         let salt = await bcrypt.genSalt(10)
         let hash = await bcrypt.hash(changedPass, salt)
         changedPass = hash
-        console.log('changed pass in hash==>',changedPass)
-        result = await userObj.updateOne({ "_id": id }, { password: changedPass });
+        log.logger.info(changedPass)
+        result = await userObj.updateOne({ '_id': id }, { password: changedPass });
 
         response.message = 'Password reset successfully'
         return response
@@ -258,14 +261,14 @@ User.prototype.resetPass = async (id,changedPass) => {
  * @description StoreUrl model update url to perticular id
  */
 User.prototype.storeUrl = async (url,id) =>{
-    console.log('url:',url,'id :',id)
+    log.logger.info(url,id)
     var response = {
         status: true,
         message: '',
         data: ''
     }
     try {
-        result = await userObj.updateOne({ "_id": id }, { imageurl : url });
+        await userObj.updateOne({ '_id': id }, { imageurl : url });
         response.message = 'Image set successfully'
         response.data = url
         return response
@@ -275,4 +278,34 @@ User.prototype.storeUrl = async (url,id) =>{
         return err
     }
 }
+
+/**
+ * @param id contains id
+ * @param data.link
+ * @description UpdateNotfication model update url to perticular id
+ */
+User.prototype.updateNotification = (data,callback) =>{
+
+    try {
+        var response = {
+            status: true
+        }
+        userObj.updateOne({ '_id': data.userId }, { notificationlink : data.notifylink } ,(error , result)=>{
+            if(error){
+                log.logger.error(error)
+                response.status = false
+                response.error = 'Notification link updated successfully'
+                return callback(response)
+            }
+            response.message = 'Notification link updated successfully'
+            response.data = result
+            return callback(null,response)
+        });
+    }
+    catch (err) {
+        log.logger.error('Exception in notification link update', err);
+        return err
+    }
+} 
+
 module.exports = User;

@@ -31,7 +31,7 @@ NoteController.prototype.addNoteController = async (req, res) => {
             res.status(400).json({ 'message': error })
         }
         else {
-            addParam = {
+            let addParam = {
                 note: req.body,
                 userId: req.token.payload.id
             }
@@ -57,7 +57,7 @@ NoteController.prototype.addNoteController = async (req, res) => {
  */
 NoteController.prototype.readNoteController = async (req, res) => {
     try {
-        query = pageListObj.pageList(req, res)
+        let query = pageListObj.pageList(req, res)
         console.log('read Note Contrller ===>')
         let param = {
             query: query,
@@ -70,7 +70,7 @@ NoteController.prototype.readNoteController = async (req, res) => {
         * @param param contains query, size of records, noteId, userId, search keyword
         */
         let readNoteRes = await noteServObj.readNoteServ(param)
-        return res.status(readNoteRes.status ? 200 : 422).send(readNoteRes)
+        return res.status(200) .send(readNoteRes)
     }
     catch (err) {
         log.logger.error('read Note==>', err)
@@ -94,7 +94,7 @@ NoteController.prototype.updateTitleController = async (req, res) => {
         }
         else {
             console.log('Update Title Contrller ===>')
-            titleParam = {
+            let titleParam = {
                 title: req.body.title,
                 noteId: req.body.noteId
             }
@@ -117,7 +117,7 @@ NoteController.prototype.updateTitleController = async (req, res) => {
 NoteController.prototype.updateDescController = async (req, res) => {
     try {
         console.log('Update Description Contrller ===>')
-        descParam = {
+        let descParam = {
             description: req.body.description,
             noteId: req.body.noteId
         }
@@ -139,7 +139,7 @@ NoteController.prototype.updateDescController = async (req, res) => {
 NoteController.prototype.updateColorController = async (req, res) => {
     try {
         console.log('Update Color Contrller ===>')
-        colorParam = {
+        let colorParam = {
             notecolor: req.body.notecolor,
             noteId: req.body.noteId
         }
@@ -161,7 +161,7 @@ NoteController.prototype.updateColorController = async (req, res) => {
 NoteController.prototype.updateRemindController = async (req, res) => {
     try {
         console.log('Update reminder Contrller ===>')
-        remindParam = {
+        let remindParam = {
             reminder: req.body.reminder,
             noteId: req.body.noteId
         }
@@ -183,7 +183,7 @@ NoteController.prototype.updateRemindController = async (req, res) => {
 NoteController.prototype.deleteRemindController = async (req, res) => {
     try {
         console.log('Delete reminder Contrller ===>')
-        delRemindParam = {
+        let delRemindParam = {
             noteId: req.body.noteId
         }
         let deleteRemindRes = await noteServObj.deleteRemindServ(delRemindParam)
@@ -203,7 +203,7 @@ NoteController.prototype.deleteRemindController = async (req, res) => {
  */
 NoteController.prototype.updateArchiveController = async (req, res) => {
     try {
-        param = {
+        let param = {
             noteId: req.body.noteId,
         }
         console.log('Update Archive Contrller ===>')
@@ -226,7 +226,7 @@ NoteController.prototype.updateArchiveController = async (req, res) => {
 NoteController.prototype.updateTrashController = async (req, res) => {
     try {
         console.log('Update trash Contrller ===>')
-        param = {
+        let param = {
             noteId: req.body.noteId,
         }
         let updateTrashRes = await noteServObj.updateTrashServ(param)
@@ -247,7 +247,7 @@ NoteController.prototype.updateTrashController = async (req, res) => {
 NoteController.prototype.deleteNoteController = async (req, res) => {
     try {
         console.log('Delete Note Contrller ===>')
-        delParam = {
+        let delParam = {
             noteId: req.body.noteId
         }
         let deleteNoteRes = await noteServObj.deleteNoteServ(delParam)
@@ -267,15 +267,15 @@ NoteController.prototype.deleteNoteController = async (req, res) => {
  */
 NoteController.prototype.readArchiveController = async (req, res) => {
     try {
-        query = pageListObj.pageList(req, res)
+        let query = pageListObj.pageList(req, res)
         console.log('Archive read Notes Contrller ===>',query)
-        archiveParam = {
+        let archiveParam = {
             query: query,
             size: req.query.size,
             userId: req.token.payload.id
         }
         let archiveNoteRes = await noteServObj.readArchiveServ(archiveParam)
-        return res.status(archiveNoteRes.status ? 200 : 422).send(archiveNoteRes)
+        return res.status(200).send(archiveNoteRes)
     }
     catch (err) {
         log.logger.error('Archive read Notes==>', err)
@@ -291,15 +291,15 @@ NoteController.prototype.readArchiveController = async (req, res) => {
  */
 NoteController.prototype.readTrashController = async (req, res) => {
     try {
-        query = pageListObj.pageList(req, res)
+        let query = pageListObj.pageList(req, res)
         console.log('Trash read Notes Contrller ===>',query)
-        trashParam = {
+        let trashParam = {
             query: query,
             size: req.query.size,
             userId: req.token.payload.id
         }
         let trashNoteRes = await noteServObj.readTrashServ(trashParam)
-        return res.status(trashNoteRes.status ? 200 : 422).send(trashNoteRes)
+        return res.status( 200 ).send(trashNoteRes)
     }
     catch (err) {
         log.logger.error('Trash read Notes==>', err)
@@ -315,15 +315,15 @@ NoteController.prototype.readTrashController = async (req, res) => {
  */
 NoteController.prototype.readRemindController = async (req, res) => {
     try {
-        query = pageListObj.pageList(req, res)
+        let query = pageListObj.pageList(req, res)
         console.log('Reminder read Notes Contrller ===>',query)
-        remindParam = {
+        let remindParam = {
             query: query,
             size: req.query.size,
             userId: req.token.payload.id
         }
         let remindNoteRes = await noteServObj.readRemindServ(remindParam)
-        return res.status(remindNoteRes.status ? 200 : 422).send(remindNoteRes)
+        return res.status(200 ).send(remindNoteRes)
     }
     catch (err) {
         log.logger.error('Reminder read Notes==>', err)
@@ -341,8 +341,8 @@ NoteController.prototype.readRemindController = async (req, res) => {
 NoteController.prototype.addLabelNoteController = async (req, res) => {
     try {
         console.log('add Label To Note Controller Contrller ===>',)
-        labelParam = {
-            notelabel : req.body.notelabel,
+        let labelParam = {
+            labelId : req.body.labelId,
             noteId: req.body.noteId
         }
         console.log('note label===>',labelParam)
@@ -355,7 +355,6 @@ NoteController.prototype.addLabelNoteController = async (req, res) => {
     }
 }
 
-
 /****************************************************************************************************
  * @param req get labelId, noteId
  * @param res send response to user
@@ -365,7 +364,7 @@ NoteController.prototype.addLabelNoteController = async (req, res) => {
 NoteController.prototype.deleteLabelNoteController = async (req, res) => {
     try {
         console.log('add Label To Note Controller Contrller ===>',)
-        var labelParam = {
+        let labelParam = {
             labelId : req.body.labelId,
             noteId: req.body.noteId
         }

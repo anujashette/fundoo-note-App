@@ -35,4 +35,14 @@ describe('Note update api testing', () => {
               done();
             });
       });
+  
+    it('token is invalid', (done) => {
+        chai.request(server)
+        .put('/note/deletereminder')
+        .set(data.invalidtoken.headers)
+            .end((err, res) => {
+                res.should.have.status(422);
+                done();
+            });
+    });
 });

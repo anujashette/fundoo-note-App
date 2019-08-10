@@ -17,7 +17,7 @@ describe('Note update api testing', () => {
     it('Update note trash testing', (done) => {
       chai.request(server)
           .put('/note/updatetrash')
-          .send(data.noteId)
+          .send(data.trashNoteId)
           .set(data.headers)
           .end((err, res) => {
                 res.should.have.status(200);
@@ -35,4 +35,14 @@ describe('Note update api testing', () => {
               done();
             });
       });
+
+    it('token is invalid', (done) => {
+        chai.request(server)
+        .put('/note/updatetrash')
+        .set(data.invalidtoken.headers)
+            .end((err, res) => {
+                res.should.have.status(422);
+                done();
+            });
+    });
 });

@@ -14,7 +14,7 @@ describe('Users', () => {
 
     it('', (done) => {
       chai.request(server)
-          .post('/user/reset')
+          .put('/user/reset')
           .set(data.headers)
           .send(data.reset)
           .end((err, res) => {
@@ -25,7 +25,7 @@ describe('Users', () => {
 
     it('Must be 6 characters password', (done) => {
         chai.request(server)
-            .post('/user/reset')
+            .put('/user/reset')
             .set(data.headers)
             .send(data.resetpassinvalid)
             .end((err, res) => {
@@ -33,4 +33,5 @@ describe('Users', () => {
               done();
             });
       });
+      
 });

@@ -30,7 +30,7 @@ exports.isAuthorized = (async function (req,res,next) {
             return response
         }
         else {
-            decoded = await jwt.verify(userToken, process.env.jwtsecret)    // jwtsectrete contains secrete value
+           var decoded = await jwt.verify(userToken, process.env.jwtsecret)    // jwtsectrete contains secrete value
                 response.status = true
                 response.decoded = decoded
         }
