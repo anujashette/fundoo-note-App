@@ -28,7 +28,7 @@ appRouter.post('/user/register', userController.register)
 appRouter.post('/user/login', userController.login)                             
 
 //  Email authentication router
-appRouter.get('/user/authorization',authObj.isAuthorized,userController.emailVerification)    
+appRouter.get('/user/authorization/:token',authObj.isAuthorized,userController.emailVerification)    
 
 //  Forget Password router
 appRouter.get('/user/forgetpass', userController.forgetPass)            
