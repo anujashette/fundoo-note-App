@@ -11,6 +11,7 @@ const s3 = require('../middleware/s3');
 const serviceObj = require('../services/user.service.js')
 const authObj = require('../middleware/authorization')
 const log = require('../logfile/logger')
+require('dotenv').config()
 
 /**
  * @param req get email,first name, last name, password
@@ -54,7 +55,7 @@ exports.register = (async function (req, res) {
         }
         catch (err) {
             log.logger.error('register controller:', err)
-            return res.status(400).json({ 'message': 'Somthing is wrong.Try again' })
+            return res.status(400).json({ 'message': 'Somthing went wrong.Try again' })
         }
     }
 })
@@ -106,11 +107,11 @@ exports.emailVerification = (async function (req, res) {
         let verifyRes = await serviceObj.emailVerification(req.token.payload.id)
         log.logger.info('verification controller==>', verifyRes)
         if (verifyRes.status)
-            return res.status(200).send(verifyRes)
+            return res.redirect(process.env.redirectToLogin)
     }
     catch (err) {
         log.logger.error('verifiction controller:', err)
-        return res.status(400).json({ 'message': 'Somthing is wrong.Try again' })
+        return res.status(400).json({ 'message': 'Somthing went wrong.Try again' })
     }
 })
 
@@ -121,6 +122,8 @@ exports.emailVerification = (async function (req, res) {
  *              otherwise req.body.email pass to services.
  */
 exports.forgetPass = async function (req, res) {
+    console.log('forgot====>',req.body);
+    
     req.check('email').isEmail()
         .withMessage('Email is not valid')
         .not()
@@ -138,7 +141,7 @@ exports.forgetPass = async function (req, res) {
         }
         catch (err) {
             log.logger.error('forget password controller:', err)
-            return res.status(400).json({ 'message': 'Somthing is wrong.Try again' })
+            return res.status(400).json({ 'message': 'Somthing went wrong.Try again' })
         }
     }
 }
@@ -151,8 +154,8 @@ exports.forgetPass = async function (req, res) {
  */
 exports.resetPass = async (req, res) => {
     log.logger.info('pass', req.body)
-    var userToken = req.headers['token'];
-    log.logger.info('header token', userToken)
+    // var userToken = req.headers['token'];
+    // log.logger.info('header token', userToken)
     req.check('password').not().isEmpty()
         .isLength({ min: 6 })
         .withMessage('Password having atleast 6 characters')
@@ -168,7 +171,7 @@ exports.resetPass = async (req, res) => {
         }
         catch (err) {
             log.logger.error('reset password controller:', err)
-            return res.status(400).json({ 'message': 'Somthing is wrong.Try again' })
+            return res.status(400).json({ 'message': 'Somthing went wrong.Try again' })
         }
     }
 }

@@ -22,7 +22,12 @@ exports.isAuthorized = (async function (req,res,next) {
         message: '',
         decoded: '',
     }
+    console.log('email verification')
+    if(req.params.token){
+        var userToken = req.params.token
+    }else{
         var userToken = req.headers['token'];
+    }
         console.log(userToken)
     try {
         if (!userToken) {

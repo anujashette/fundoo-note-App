@@ -1,0 +1,213 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#cardid{
+  /* background-color: rgb(187, 223, 240); */
+  height: 430px;
+  width: 60%;
+  margin-left: 20%;
+  margin-top: 8%;
+}
+#cardidlogin{
+  /* background-color: rgb(187, 223, 240); */
+  height: 430px;
+  width: 45%;
+  margin-left: 28%;
+  margin-top: 8%;
+}
+
+.Title {
+  font-size: 14;
+}
+.NameText{
+  display: flex;
+  justify-content: space-around;
+  margin-left: 28%;
+  margin-right: 28%;
+}
+.FName{
+  width: 35%;
+}
+.Password{
+  width: 38%;
+}
+.label-font{
+  font-size: 80%;
+  margin-top:1%; 
+  display: flex;
+  justify-content: center;
+}
+.Email{
+  width: 38%;
+  height: 60px;
+}
+.Emaillogin{
+  width: 38%;
+  height: 60px;
+}
+.Button{
+  margin: 2%;
+  display: flex;
+  justify-content: center;
+}
+
+.LoginButton{
+  margin-top: 5%;
+}
+
+.CreateAccount{
+  margin-top: 2%;
+  margin-right: 20%;
+  list-style: none;
+}
+
+.font-color:nth-child(1){
+  color: #4076e2
+}
+.font-color:nth-child(2){
+  color: #e24040
+}
+.font-color:nth-child(3){
+  color: #e2b740
+}
+.font-color:nth-child(4){
+  color: #4076e2
+}
+.font-color:nth-child(5){
+  color: #40e27e
+}
+.font-color:nth-child(6){
+  color: #e24040
+}
+
+.button-letter{
+  background-color: rgb(63, 108, 231);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-left: 3%;
+  margin-right:15%;
+
+}
+
+.login-button-letter{
+  background-color: rgb(253, 244, 244);
+  border: none;
+  color: rgb(63, 108, 231);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-right: 3%;
+  margin-left: 10%;
+}
+
+.button-reset{
+  background-color: rgb(253, 244, 244);
+  border: none;
+  color: rgb(63, 108, 231);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  /* margin-right: 10%;
+  margin-left:10%; */
+  
+}
+@media only screen and (max-width: 450px) {
+/* For mobile phones: */
+#cardid {
+  /* background-color: rgb(187, 240, 194); */
+  height: 492px;
+  width: 80%;
+  margin-left: 12%;
+  margin-top: 20%;
+}
+
+#cardidlogin{
+  /* background-color: rgb(187, 240, 194); */
+  height: 440px;
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 8%;
+}
+
+.NameText{
+  display: flex;
+  justify-content: space-around;
+  margin-left: 7%;
+  margin-right: 8%;
+}
+.FName{
+  width: 40%;
+}
+.Email{
+  width: 65%;
+  height: 60px;
+}
+.Emaillogin{
+  width: 65%;
+  height: 60px;
+}
+.Password{
+  width: 65%;
+}
+.CreateAccount{
+  margin-top: 2%;
+  margin-right: 15%;
+  list-style: none;
+}
+.Button{
+  margin-top: 8%;
+}
+.LoginButton{
+  margin-top: 18%;
+  size: 10%
+}
+}

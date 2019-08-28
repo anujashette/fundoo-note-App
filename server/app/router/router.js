@@ -31,10 +31,10 @@ appRouter.post('/user/login', userController.login)
 appRouter.get('/user/authorization/:token',authObj.isAuthorized,userController.emailVerification)    
 
 //  Forget Password router
-appRouter.get('/user/forgetpass', userController.forgetPass)            
+appRouter.post('/user/forgetpass', userController.forgetPass)            
 
 //  Reset Password router
-appRouter.put('/user/reset', authObj.isAuthorized, userController.resetPass)
+appRouter.put('/user/resetpass', authObj.isAuthorized, userController.resetPass)
 
 //  Upload image and store in database
 appRouter.put('/api/file/upload', upload.single("photos"), authObj.isAuthorized, userController.uploadFile) 

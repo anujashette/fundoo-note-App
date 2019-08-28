@@ -1,0 +1,283 @@
+.Menu-label {
+  top: 10%;
+  width: 280px;
+}
+.List-item-text {
+  font-size: 0.89rem;
+  color: rgb(85, 85, 85);
+}
+
+.Label-margin {
+  margin-left: -204px;
+  margin-top: 11px;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #73afa5
+  
+}
+
+.Icon-button{
+    padding: 5px;
+}
+
+.Toolbar {
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: rgb(207, 207, 207);
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.Bar-label {
+  color: rgb(102, 102, 102);
+  width: 3%;
+  font-size: 1.2rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.Search-bar {
+  display: flex;
+  margin-left: 8rem;
+  width: 60%;
+  height: 50px;
+  color: black;
+  background-color: rgba(239, 241, 241, 0.925);
+  border-radius: 8px;
+}
+
+.Search {
+  width: 85%;
+}
+
+.Profile-icon {
+  width: 10%;
+  margin-left: 10%;
+}
+
+.Menu-size {
+  top: 70px;
+  left: 635.562px;
+}
+
+.button-signout {
+  background-color: rgb(247, 247, 247);
+  color: rgb(0, 0, 0);
+  border-style: solid;
+  border-width: 1px;
+  padding: 8px 15px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 13px;
+  border-radius: 5px;
+  margin-top: 0.4rem;
+  margin-left: 70%;
+}
+
+.profile-menu {
+  display: flex;
+  justify-content:space-evenly;
+  max-width: 100%;
+}
+
+.profile-name {
+  /* padding: 2rem; */
+  display: flex;
+  padding-top: 5%;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 150px;
+}
+
+.image-selector {
+  width: 100%;
+  border-radius: 50%;
+}
+
+.circlecanvas {
+  position: static;
+  background-color: #ffffff;
+  border-style: solid;
+  // border-width: 1px;
+  border-color: #ffffff;
+  width: 80px;
+  height: 80px;
+  margin-top: 3%;
+  margin-bottom: 4%;
+  margin-left: -12%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.Drop-box {
+  display: flex;
+  justify-content: end;
+  margin-left: 16%
+}
+
+.circleIcon {
+  position: static;
+  background-color: #73afa5;
+  border-style: solid;
+  // border-width: 1px;
+  border-color: #ffffff;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: space-around;
+}
+.profile {
+  align-content: center;
+}
+
+.overlay {
+  position: absolute;
+  margin-top: 45px;
+  padding-top: 0%;
+  padding-bottom: 3%;
+  background-color: transparent;
+  background: rgba(216, 216, 216, 0.918);
+  width: 68px;
+  height: 19px;
+  transition: -0.5s ease;
+  border-bottom-left-radius: 150px;
+  border-bottom-right-radius: 150px;
+  color: #0c0b0b;
+  font-size: 11px;
+  text-align: center;
+}
+
+.overlay {
+  opacity: 5;
+}
+
+.Bar-profile {
+  display: flex;
+  justify-content: center;
+  color: black;
+}
+
+.Drawer-main {
+  /* position: fixed; */
+  // z-index: 1300;
+  right: 0px;
+  bottom: 0px;
+  top: 0px;
+  left: 0px;
+}
+
+.symbols{
+  margin-right:-6rem; 
+  display: flex;
+  justify-content: center;
+}
+
+.new-note-div{
+  display: flex;
+  justify-content: center
+}
+
+#new-note-card{
+  height: 45px;
+  width: 45%;
+  margin-top: 8%;
+  border-radius: 5px;
+  box-shadow:#555555;
+  box-shadow: 0 0 2px black;
+}
+
+.Note-bar{
+  display: flex;
+  justify-content:space-between;
+  width: 100%;
+  height: 50px;
+  color: rgb(0, 0, 0);
+  margin-left: initial;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.Take-a-note{
+    width: 100%;
+    margin-bottom: 6%;
+    font-weight: 650;
+}
+
+#new-note-card-large{
+  min-height: 130px;
+  width: 615px;
+  margin-top: 8%;
+  border-radius: 5px;
+  word-wrap: break-word;
+  padding: 5px;
+}
+
+.Note-bar-large{
+  display: flex;
+  flex-direction: column;
+  width: 122%;
+  color: black;
+  margin-left: initial;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.Take-a-note-large1{
+    width: 85%;
+    margin-bottom: -1%;
+    font-weight: 800;
+}
+.Take-a-note-large2{
+  width: 85%;
+  font-weight: 600;
+  font-size: 10rem;
+  min-height: 30px;
+}
+
+.Icon-div{
+  // display: flex;
+}
+
+.Self-icon{
+  height: 10px;
+  width: 10px;
+}
+
+.close-button{
+  background-color: rgb(255, 255, 255);
+  border: none;
+  color: rgb(27, 27, 27);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  border-radius: 10px;
+  margin-right: 3%;
+  margin-left: 40%;
+}
+
+.button-next-prev{
+  background-color: rgb(255, 255, 255);
+  border: none;
+  color: rgb(228, 228, 228);
+  padding: 56px 10px;
+  text-align: center;
+  text-decoration: none;
+  // display: inline-block;
+  font-size: 16px;
+  // margin: 4px 2px;
+  // cursor: pointer;
+  border-radius: 10px;
+  // margin-left: 3%;
+  // margin-right:15%;
+
+}

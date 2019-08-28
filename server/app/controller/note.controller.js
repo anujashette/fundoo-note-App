@@ -24,7 +24,7 @@ function NoteController() { }
 NoteController.prototype.addNoteController = async (req, res) => {
     try {
         req.check('title').not().isEmpty().withMessage('unique Title is required')
-        req.check('description').not().isEmpty().withMessage('Description is required')
+        // req.check('description').not().isEmpty().withMessage('Description is required')
         error = req.validationErrors()
 
         if (error) {
@@ -35,7 +35,7 @@ NoteController.prototype.addNoteController = async (req, res) => {
                 note: req.body,
                 userId: req.token.payload.id
             }
-            console.log('Create Note Contrller ===>')
+            console.log('Create Note Contrller ===>',addParam.note)
             /**
              * @param addParam contains note data and userId
              */

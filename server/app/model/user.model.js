@@ -146,7 +146,10 @@ User.prototype.login = async (body) => {
                    await client.set('user'+data.id,token,redis.print)    
 
                     response.message = 'Login successful'
-                    response.data = token
+                    response.data = {
+                        token:token,
+                        user:data
+                    }
                 }
                 else {
                     response.status = false,
@@ -208,12 +211,12 @@ User.prototype.forgetPass = async (body) => {
     try {
         let data = await userObj.findOne({ 'email': body.email })
         log.logger.info(data)
-        if (data) {
+        if (data !== '') {
             let emailToken = await genTokenObj.genToken(data)
             let url = process.env.reserurl + emailToken;
             log.logger.info( url)
             mailObj.mailer(url, data.email)
-            response.message = 'Reset password link is send to your email'
+            response.message = 'Reset password link is sent to your email'
         }
         else {
             response.status = false
@@ -240,6 +243,7 @@ User.prototype.resetPass = async (id,changedPass) => {
     }
     try {
         log.logger.info(changedPass)
+        console.log('changed pass======>',changedPass)
         let salt = await bcrypt.genSalt(10)
         let hash = await bcrypt.hash(changedPass, salt)
         changedPass = hash
