@@ -7,7 +7,6 @@ import ReminderComponent from './ReminderComponent';
 import ColorComponent from './ColorComponent';
 import ArchiveComponent from './ArchiveComponent';
 import LabelComponent from './LabelComponent';
-import CreateNoteComponent from './CreateNoteComponent';
 import EditNoteComponent from './EditNoteComponent';
 
 class DisplayNote extends Component {
