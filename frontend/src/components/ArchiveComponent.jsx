@@ -7,7 +7,7 @@ class ArchiveComponent extends Component {
         return (
             <div>
                 <Tooltip title="Archive">
-                    <IconButton><Archive style={{ width: "17px" }} /></IconButton>
+                    <IconButton onClick={this.handleArchive}><Archive style={{ width: "17px" }} /></IconButton>
                 </Tooltip>
             </div>
         );
