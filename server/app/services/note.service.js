@@ -252,7 +252,7 @@ NoteService.prototype.updateTrashServ = async (updateTrash) => {
     let updatedTrash = ''
     let status = await noteModelObj.readNote(updateTrash)
 
-    if (!status.error && status.readData[0].archive == false) {
+    if (!status.error ) {
         let field = { trash: !status.readData[0].trash }
         updatedTrash = await noteModelObj.updateNote(field, updateTrash.noteId)
     }
@@ -316,7 +316,7 @@ NoteService.prototype.readArchiveServ = async (readParam) => {
     console.log('Read archive notes Service ===>', readParam.userId)
 
     let readArchiveRes = {}
-    readParam.field = { 'archive': true }
+    readParam.field = { 'archive': true , 'trash':false}
     let getArchiveNotes = await noteModelObj.readNote(readParam)
 
     if (getArchiveNotes.error) {

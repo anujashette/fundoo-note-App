@@ -5,11 +5,12 @@ import LoginPage from './pages/LoginPage';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import ForgotPage from './pages/ForgotPage';
-import AppBarPage from './pages/AppBarPage';
 import DashboardPage from './pages/DashboardPage';
 
 class App extends React.Component {
   render() {
+    console.log('app js',localStorage.getItem('LoginToken'));
+    
     return (
       <div className="App">
         <BrowserRouter>

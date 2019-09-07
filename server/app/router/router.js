@@ -46,7 +46,7 @@ appRouter.put('/user/notificationlink', authObj.isAuthorized, userController.not
 appRouter.post('/note/addnote', authObj.isAuthorized, noteController.addNoteController)                
 
 //  Read notes router
-appRouter.get('/note/readnote', authObj.isAuthorized, noteController.readNoteController)          
+appRouter.post('/note/readnote', authObj.isAuthorized, noteController.readNoteController)          
 
 //  Update title router
 appRouter.put('/note/updatetitle', authObj.isAuthorized, noteController.updateTitleController)  
@@ -70,7 +70,7 @@ appRouter.put('/note/updatearchive', authObj.isAuthorized, noteController.update
 appRouter.put('/note/updatetrash', authObj.isAuthorized, noteController.updateTrashController)
 
 //  Delete note router
-appRouter.delete('/note/deletenote', authObj.isAuthorized, noteController.deleteNoteController)
+appRouter.post('/note/deletenote', authObj.isAuthorized, noteController.deleteNoteController)
 
 //  Read archive notes router
 appRouter.get('/note/readarchivenotes', authObj.isAuthorized, noteController.readArchiveController)   
@@ -97,7 +97,7 @@ appRouter.get('/label/readlabel', authObj.isAuthorized, labelController.readLabe
 appRouter.put('/label/updatelabel', authObj.isAuthorized, labelController.updateLabelController) 
 
 //  Delete label router
-appRouter.delete('/label/deletelabel', authObj.isAuthorized, labelController.deleteLabelController)
+appRouter.post('/label/deletelabel', authObj.isAuthorized, labelController.deleteLabelController)
 
 
 

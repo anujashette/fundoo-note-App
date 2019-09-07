@@ -1,8 +1,10 @@
 
 #Display-note-card {
   border-style: solid;
-  margin-top: 8%;
+  margin-top: 10%;
   width: 205px;
+  // width: 100%;
+  margin-left: 25px;
   border-color: #9e9d9d;
   border-radius: 5px;
   min-height: 111px;
@@ -12,6 +14,21 @@
   box-shadow:#555555;
   box-shadow: 0 0 1px black;
 }
+
+#Display-note-card-list {
+  border-style: solid;
+  margin-top: 5%;
+  width: 100%;
+  border-color: #9e9d9d;
+  border-radius: 5px;
+  min-height: 111px;
+  text-align: left;
+  border-width: 1px;
+  word-wrap: break-word;
+  box-shadow:#555555;
+  box-shadow: 0 0 1px black;
+}
+
 .Icon-div{
   display: flex;
 }
@@ -37,14 +54,15 @@
   display: flex;
   flex-wrap: wrap;
   width: 45%;
-  justify-content: space-between;
+  display: flow-root;
+  justify-content: stretch;
 }
 
 .mainnotes-grid{
   display: flex;
   flex-wrap: wrap;
-  width: 52%;
-  justify-content: space-between;
+  width: 57%;
+  justify-content: flex-start;
 }
 
 .allnotes-div{
@@ -59,4 +77,96 @@
 
 .desc-div{
   min-height: 19px;
+}
+
+.MoreMenu{
+  height: 50px;
+  width: 50px;
+}
+
+.delete-div{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.add-label-div{
+  padding-left: 10px;
+  margin-right: 28px;
+}
+
+.label-div{
+  left:50%
+}
+
+.labels-div{
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  overflow: scroll;
+  min-height: 200px;
+  // position: fixed;
+  // flex-wrap: wrap;
+
+}
+
+.create-button{
+  background-color: rgb(255, 255, 255);
+  border: solid;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  border: floralwhite;
+  text-decoration: none;
+  font-size: 13px;
+  width: 80px;
+  height: 35px;
+  margin: 0px 2px;
+  display: inline-block;
+  cursor: pointer;
+  outline: deepskyblue;
+}
+
+.done-button{
+  background-color: #f5f5f5;
+    color: black;
+    text-align: center;
+    border: floralwhite;
+    text-decoration: none;
+    font-size: 13px;
+    width: 60px;
+    height: 25px;
+    margin: 10px 20px 0px 270px;
+    display: inline-block;
+    cursor: pointer;
+    outline: deepskyblue;
+}
+.null-div{
+  margin-top: 100px;
+}
+
+.color-item{
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+.dialog-edit-label-div{
+  width: 250px;
+}
+.edit-label-1{
+  min-height: 80px;
+  overflow-y: scroll;
+  max-height: 400px;
+  margin-top: 15px
+}
+
+.edit-label-2{
+  height: 50px;
+}
+
+.labels-div{
+  display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    min-height: 200px;
+    overflow: unset
 }

@@ -13,7 +13,7 @@ const theme = createMuiTheme({
     MuiMenu: {
       paper: {
         "width": "24%",
-        "height": "27%",
+        height: "27%",
         "border-radius": "15px",
       }
     },

@@ -1,6 +1,8 @@
 .Menu-label {
   top: 10%;
   width: 280px;
+  outline:none;
+
 }
 .List-item-text {
   font-size: 0.89rem;
@@ -201,7 +203,7 @@
   color: rgb(0, 0, 0);
   margin-left: initial;
   background-color: white;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .Take-a-note{
@@ -213,16 +215,26 @@
 #new-note-card-large{
   min-height: 130px;
   width: 615px;
-  margin-top: 8%;
+  margin-top: 10%;
   border-radius: 5px;
   word-wrap: break-word;
   padding: 5px;
 }
 
+#edit-note-card-large{
+  min-height: 130px;
+  width: 615px;
+  // margin-top: 8%;
+  border-radius: 10px;
+  word-wrap: break-word;
+  padding: 5px;
+  box-shadow: inset 0 0 black;
+}
+
 .Note-bar-large{
   display: flex;
   flex-direction: column;
-  width: 122%;
+  width: 115%;
   color: black;
   margin-left: initial;
   background-color: white;
@@ -280,4 +292,11 @@
   // margin-left: 3%;
   // margin-right:15%;
 
+}
+
+.menu-css{
+  background-color:antiquewhite;
+  border-top-right-radius:50px;
+  border-bottom-right-radius: 50px;
+  cursor: pointer;  
 }

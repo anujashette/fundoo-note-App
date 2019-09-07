@@ -7,10 +7,15 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Archive from '@material-ui/icons/ArchiveOutlined';
 import Notification from '@material-ui/icons/NotificationsNoneOutlined'
 import EditOutline from '@material-ui/icons/EditOutlined'
+import LabelIcon from '@material-ui/icons/LabelOutlined'
 import Trash from '@material-ui/icons/DeleteOutlined'
 import '../Css/component.scss';
+import '../Css/displayNote.scss';
 import Bulb from '../assets/bulb.svg';
-import { createMuiTheme, MuiThemeProvider, Drawer } from '@material-ui/core'
+import { createMuiTheme, MuiThemeProvider, Drawer, Icon } from '@material-ui/core'
+import { Checkbox , FormControlLabel} from '@material-ui/core';
+import {updateNoteLabel} from '../services/NoteService'
+import { Chip } from '@material-ui/core';
 
 const theme = createMuiTheme({
     overrides: {
@@ -45,21 +50,81 @@ class DrawerComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
+           onClickCss: "",
+           labelArray: this.props.labelData
+
         }
     }
 
+    handleNotes = () =>{
+        this.setState({})
+        this.props.handleGetNotes()
+    }
+ 
+    handleReminder = () =>{
+
+    }
+
+    handleEditLabel = () =>{
+        this.props.handleEditLabel()
+    }
+
+    handleArchive = () =>{
+        // this.setState({
+        //     onClickCss:"menu-css"
+        // })
+        this.props.archiveNotes()
+    }
+
+    handleTrash = () =>{
+        console.log('trash Notes::::::::::',this.props);
+        
+        this.props.trashNotes()
+    }
+
+    handleChangeL = selectId => (e) => {
+        this.setState({ [selectId]: e.target.checked })
+
+        let data = {
+            noteId:this.props.noteId,
+            labelId:selectId
+        }
+       let noteLabel = updateNoteLabel(data);
+       console.log('add label on note  ',noteLabel);
+    }
+    handleChangeL = selectId => (e) => {
+    }
+
     render() {
+        console.log('in edit label',this.state.labelArray)
+
+        if (this.props.labelData) {
+            var labels = this.props.labelData.map((key, index) => {
+                if(!key.isDeleted){
+                return (  <ListItem 
+                    key={index}
+                // onClick={this.handleEditLabel} 
+                // className={this.state.onClickCss}
+                 style={{cursor: "pointer"}}>
+                <ListItemIcon><LabelIcon /></ListItemIcon>
+                <ListItemText primary={key.label} />
+            </ListItem>
+                  )}
+                  else 
+                    return null
+            })
+              }
         const sideList = (
 
             <div className="Menu-label">
                 <List>
-                    <ListItem className="List-item">
+                    <ListItem onClick={this.handleNotes} className={this.state.onClickCss} style={{  cursor: "pointer"}}>
                         <ListItemIcon>
                             <img src={Bulb} alt="dfgf" />
                         </ListItemIcon>
                         <ListItemText primary="Notes" />
                     </ListItem>
-                    <ListItem>
+                    <ListItem onClick={this.handleReminder} className={this.state.onClickCss} style={{cursor: "pointer"}}>
                         <ListItemIcon> <Notification /></ListItemIcon>
                         <ListItemText primary="Reminders" />
                     </ListItem>
@@ -70,18 +135,20 @@ class DrawerComponent extends Component {
                 </div>
 
                 {/* Call to function to display labls as per created */}
-                <ListItem>
+                    {labels}
+
+                <ListItem onClick={this.handleEditLabel} className={this.state.onClickCss} style={{cursor: "pointer"}}>
                     <ListItemIcon><EditOutline /></ListItemIcon>
                     <ListItemText primary="Edit Labels" />
                 </ListItem>
                 <Divider />
-                    <ListItem>
-                        <ListItemIcon> <Archive /> </ListItemIcon>
+                    <ListItem onClick={this.handleArchive} className={this.state.onClickCss} style={{cursor: "pointer"}}>
+                        <ListItemIcon > <Archive /> </ListItemIcon>
                         <ListItemText primary="Archive" />
                     </ListItem>
-                    <ListItem>
+                    <ListItem onClick={this.handleTrash} className={this.state.onClickCss} style={{cursor: "pointer",margin: "0px 0px 70px 0px"}}>
                         <ListItemIcon> <Trash /></ListItemIcon>
-                        <ListItemText primary="Trash" />
+                        <ListItemText primary="Bin" />
                     </ListItem>
                 </List>
             </div>
@@ -94,16 +161,12 @@ class DrawerComponent extends Component {
 
                     <Drawer
                         open={this.props.left}
-                    // onClose={this.toggleDrawer('left', false)}
-                    // onOpen={this.toggleDrawer('left', true)}
-                    variant="persistent"
-                    anchor="left"
+                        variant="persistent"
+                        anchor="left"
                     >
                         <div
                             tabIndex={0}
-                        // role="button"
-                        // onClick={this.toggleDrawer('left', false)}
-                        // onKeyDown={this.toggleDrawer('left', false)}
+                            style={{outline:"none"}}
                         >
                             {sideList}
                         </div>

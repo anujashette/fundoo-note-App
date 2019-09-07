@@ -10,12 +10,9 @@ import DrawerComponent from './DrawerComponent';
 import RefreshOutlined from '@material-ui/icons/RefreshOutlined'
 import Cross from '@material-ui/icons/CancelRounded'
 import Tooltip from '@material-ui/core/Tooltip';
-// import Grid from '@material-ui/icons/GridOnOutlined'
-import { getAllNote } from '../services/NoteService'
-import CreateNoteComponent from './CreateNoteComponent';
-import DisplayGrid from './DisplayGrid';
 import Grid from '../assets/grid.svg'
 import List from '../assets/list.svg'
+import Cancel from '@material-ui/icons/Close'
 
 class AppBarComponent extends Component {
 
@@ -28,24 +25,9 @@ class AppBarComponent extends Component {
             gridview: true,
             noteData: [],
             firstPage:1,
-            lastPage:1
+            lastPage:1,
+            searchKey:''
         };
-    }
-
-    componentDidMount() {
-        this.handleGetNotes()
-    }
-
-    handleGetNotes = () => {
-        getAllNote()
-            .then((response) => {
-                console.log('get all note data=====>', response.data.data)
-                this.setState({ noteData: response.data.data, lastPage:response.data.totalpages})
-                console.log('get all note data in state=====>', this.state.noteData)
-            })
-            .catch((error) => {
-                console.log('get all note error =====>', error)
-            })
     }
 
     handleMenu = event => {
@@ -63,13 +45,26 @@ class AppBarComponent extends Component {
     };
 
     handleGrid = () => {
+        console.log('grid state',this.state.gridview);
+        
         this.setState({
             gridview: !this.state.gridview,
         });
+        this.props.gridView(this.state.gridview)
+    }
+
+    handleChange = (event) =>{
+        let searchKey = event.target.value
+        this.setState({searchKey:searchKey})
+        this.props.searchNotes(this.state.searchKey)
+
+    }
+    handleSearch = () =>{
+        console.log('handle change',this.state.searchKey)
+        this.props.searchNotes(this.state.searchKey)
     }
 
     render() {
-        // const this.anchorEl = Boolean(this.anchorEl);
 
         return (
             <div>
@@ -82,29 +77,29 @@ class AppBarComponent extends Component {
                             </IconButton>
                         </Tooltip>
                         <img src={funlogo} alt="fun-logo" />
-                        <label className="Bar-label">Fundoo</label>
+                        <label className="Bar-label">{this.props.menuName}</label>
                         <div className="Search-bar">
                             <Tooltip title="Search">
-                                <IconButton><Search /></IconButton>
+                                <IconButton onClick={this.handleSearch}><Search /></IconButton>
                             </Tooltip>
-                            <InputBase placeholder="Search" className="Search"></InputBase>
-                            <IconButton onClick={this.handleClear}><Cross /></IconButton>
+                            <InputBase placeholder="Search" onChange={this.handleChange} onKeyPress={this.handleSearch} value={this.state.searchKey} className="Search"></InputBase>
+                            <IconButton onClick={this.handleClear}><Cancel /></IconButton>
                         </div>
                         <div className="symbols">
                             <Tooltip title="Refresh">
                                 <IconButton><RefreshOutlined /></IconButton>
                             </Tooltip>
 
-                            <IconButton onClick={this.handleGrid}> {this.state.gridview ?
+                            <IconButton onClick={this.handleGrid}>
+                                 {this.state.gridview ?
                                 <Tooltip title="Grid view">
-                                    <img src={Grid} style={{ height: "22px", color: "#9e9d9d" }} />
+                                    <img src={Grid} alt="Grid" style={{ height: "22px", color: "#9e9d9d" }} />
                                 </Tooltip>
                                 :
                                 <Tooltip title="List view">
-                                    <img src={List} style={{ height: "22px", color: "#9e9d9d" }} />
+                                    <img src={List} alt="List" style={{ height: "22px", color: "#9e9d9d" }} />
                                 </Tooltip>}
                             </IconButton>
-
                         </div>
                         <div className="Drop-box">
                             <DropDownComponent
@@ -113,13 +108,13 @@ class AppBarComponent extends Component {
                     </Toolbar>
                 </AppBar>
 
-                <DrawerComponent left={this.state.left} />
-                <CreateNoteComponent handleGetNotes={this.handleGetNotes} />
-                <DisplayGrid noteData={this.state.noteData} DisplayGrid={this.state.gridview} />
-                {/* <div>
-                    <button className="button-next-prev">Previous</button>
-                    <button className="button-next-prev">Next</button>
-                </div> */}
+                <DrawerComponent left={this.state.left} 
+                labelData = {this.props.labelData}
+                handleGetNotes={this.props.handleGetNotes}
+                handleEditLabel={this.props.handleEditLabel}
+                archiveNotes={this.props.archiveNotes}
+                trashNotes={this.props.trashNotes}
+                />
             </div>
         );
     }
