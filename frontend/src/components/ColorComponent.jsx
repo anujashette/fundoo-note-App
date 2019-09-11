@@ -37,11 +37,12 @@ class ColorComponent extends Component {
         this.setState({ selected: color })
         this.props.selectColor(color)
         console.log('color in color comp', this.state.selected)
+        
     }
 
     handleClose = () => {
         this.setState({ anchorEl: null });
-        if (this.props.createNote === 'true') {
+        if (this.props.createNote) {
 
         }
         else {

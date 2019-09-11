@@ -436,6 +436,26 @@ NoteService.prototype.deleteLabelServ = async (deleteLabel) => {
 
     return deleteLabelRes
 }
+
+NoteService.prototype.getCountServ = async (getField) => {
+    console.log('Note count Service ===>', getField)
+
+    let CountResponse = {}
+    getField.count = true
+    let countNote = await noteModelObj.readNote( getField , getField.count)
+
+    if (countNote.error) {
+        CountResponse.status = false
+        CountResponse.error = countNote.error
+        return CountResponse
+    }
+
+    CountResponse.status = true
+    CountResponse.message = 'Notes calculated successfully'
+    CountResponse.data = countNote
+
+    return CountResponse
+}
 /****************************************************************************************************
  * @description NoteService object created and exports to controller
  ****************************************************************************************************

@@ -96,34 +96,47 @@ Note.prototype.createNote = async (addField, userId) => {
  * @description Read note from database using noteId/search by title,description,color,reminder/userID
  ***************************************************************************************************** 
  */
-Note.prototype.readNote = async (param) => {
+Note.prototype.readNote = async (param,count) => {
     try {
+        var totalPages ={}
         var readData = {}
-        console.log('Read Note Model ===>', param)
-        if (param.noteId !== undefined) {
+        console.log('Read Note Model ===>', count)
+        if (param.noteId !== undefined ) {
              readData = await note.find({ '_id': param.noteId }).populate('notelabel')
             // await client.set('readBynote' + param.noteId, JSON.stringify(readData), redis.print)
         }
         else if (param.searchKey) {
              readData = await note.find
                 ({
-                    $or:
+                   $and: [{$or:
                         [
                             { 'title': { $regex: param.searchKey, $options: 'i' } },
                             { 'description': { $regex: param.searchKey, $options: 'i' } },
-                            { 'notecolor': { $regex: param.searchKey, $options: 'i' } },
+                            // { 'notecolor': { $regex: param.searchKey, $options: 'i' } },
                             { 'reminder': { $regex: param.searchKey, $options: 'i' } },
-                        ]
+                        ]},
+                        {'trash':false}
+                    ]
                 }).populate('notelabel')
+        }
+        else if(count)
+        {
+            // totalPages.totalCount = await note.countDocuments({ "userId": param.userId })
+            totalPages.noteCount = await note.countDocuments({ $and: [{ "userId": param.userId },{ 'trash': false, 'archive': false }] })
+            totalPages.reminderCount = await note.countDocuments({ $and: [{ "userId": param.userId },{ "reminder": { $ne: [] } }] })
+            totalPages.archiveCount = await note.countDocuments({ $and: [{ "userId": param.userId },{'archive': true}] })
+            totalPages.trashCount = await note.countDocuments({ $and: [{ "userId": param.userId },{'trash': true}] })
+            console.log("calulated notes",totalCount);
+            
         }
         else {
             console.log('userId===>', param)
             var totalCount = await note.countDocuments({ $and: [{ "userId": param.userId }, param.field] })
-             readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
+            readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
             console.log('read stringify in model====================================', JSON.stringify(param.field))
 
             await client.set('readAllBy'+JSON.stringify(param.field), JSON.stringify(readData), redis.print)
-            var totalPages = parseInt(Math.ceil(totalCount / parseInt(param.size)))
+            totalPages = parseInt(Math.ceil(totalCount / parseInt(param.size)))
         }
         if (readData != '') {
             let data = { readData: readData, totalPages: totalPages }

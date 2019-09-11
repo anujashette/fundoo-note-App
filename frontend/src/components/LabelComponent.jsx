@@ -50,15 +50,22 @@ class LabelComponent extends Component {
         this.setState({ label: label });
     }
 
-    handleChangeL = selectId => (e) => {
+    handleChangeL = (selectId,selectLabel) => (e) => {
         this.setState({ [selectId]: e.target.checked })
-
+        if(!this.props.noteType && e.target.checked){
+            this.props.addLabel(selectId,selectLabel)
+        }
+        else if(!this.props.noteType && !e.target.checked){
+            this.props.deleteLabel(selectId,selectLabel)
+        }
+        else{
         let data = {
             noteId:this.props.noteId,
             labelId:selectId
         }
        let noteLabel = updateNoteLabel(data);
        console.log('add label on note  ',noteLabel);
+       this.props.getNotes()}
     }
 
     handleLabel =()=> {
@@ -69,11 +76,12 @@ class LabelComponent extends Component {
         let response = addLabel(labelData);
         console.log('response add label  ,', response);
         this.setState({ label: '' })
+        this.props.getNotes()
     }
 
     handleLabelClose =() =>{
         this.setState({openLabel:false})
-        // this.props.changeDisplay()
+        this.props.getNotes()
         
     }
     
@@ -88,7 +96,7 @@ class LabelComponent extends Component {
                 control={
                   <Checkbox
                     checked={this.state.labelArray._id}
-                    onChange={this.handleChangeL(key._id)}
+                    onChange={this.handleChangeL(key._id,key.label)}
                     value=""
                   />
                 }

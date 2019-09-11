@@ -96,12 +96,14 @@ class DropDownComponent extends React.Component {
       this.setState({ imageUrl: localStorage.getItem('imageurl') })
     }
     let letter = localStorage.getItem('firstname')
-    console.log('First name letter', letter.charAt(0).toUpperCase())
-    this.setState({ nameLetter: letter.charAt(0).toUpperCase(),
-      firstname:localStorage.getItem('firstname'),
-      lastname:localStorage.getItem('lastname'),
-      email:localStorage.getItem('email')
-    })
+    if(localStorage.getItem('token1') !== undefined){
+      console.log('First name letter', letter.charAt(0).toUpperCase())
+      this.setState({ nameLetter: letter.charAt(0).toUpperCase(),
+        firstname:localStorage.getItem('firstname'),
+        lastname:localStorage.getItem('lastname'),
+        email:localStorage.getItem('email')
+      })
+    }
   }
 
   render() {

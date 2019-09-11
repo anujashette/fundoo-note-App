@@ -378,6 +378,22 @@ NoteController.prototype.deleteLabelNoteController = async (req, res) => {
     }
 }
 
+NoteController.prototype.noteCount = async (req, res) => {
+    try {
+        console.log('Note count controller  ===>',)
+        let noteParam = {
+            userId: req.token.payload.id
+        }
+        console.log('note count===>',noteParam)
+        let NoteRes = await noteServObj.getCountServ(noteParam)
+        return res.status(NoteRes.status ? 200 : 422).send(NoteRes)
+    }
+    catch (err) {
+        log.logger.error('Notes count==>', err)
+        return res.status(400).json({ 'error': err })
+    }
+}
+
 /****************************************************************************************************
  * @description NoteController object created and exports to router
  ****************************************************************************************************

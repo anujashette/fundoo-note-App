@@ -1,11 +1,12 @@
 
 #Display-note-card {
   border-style: solid;
-  margin-top: 10%;
+  margin-top: 8%;
+  margin-bottom: 10%;
   width: 205px;
   // width: 100%;
   margin-left: 25px;
-  border-color: #9e9d9d;
+  border-color: #ffffff;
   border-radius: 5px;
   min-height: 111px;
   text-align: left;
@@ -165,8 +166,24 @@
 
 .labels-div{
   display: flex;
-    flex-direction: column;
-    margin-left: 10px;
-    min-height: 200px;
+    // flex-direction: row;
+    // margin-left: 10px;
+    // min-height: 200px;
     overflow: unset
+}
+
+.chart-div{
+  display: flex;
+  flex-direction: column;
+  margin-left: 25px;
+  margin-right: 40px;
+  margin-top: 34%;
+
+}
+
+.chart-avatar{
+  background: "#2E9AFE"; 
+  width: "15px";
+   height: "15px"; 
+   margin-bottom: "300%";
 }

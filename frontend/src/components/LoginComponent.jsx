@@ -5,6 +5,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { login } from '../services/UserService'
 import Snackbar from '@material-ui/core/Snackbar'
 import Typography from '@material-ui/core/Typography';
+import { Redirect } from 'react-router-dom'
 import '../App.css'
 
 class LoginComponent extends Component {
@@ -15,10 +16,12 @@ class LoginComponent extends Component {
                 email: '',
                 password: '',
 
+
             },
             snackbaropen: false,
             snackbarmsg: '',
             submitted: false,
+            loggedIn: false
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleRegister = this.handleRegister.bind(this)
@@ -51,16 +54,18 @@ class LoginComponent extends Component {
                 email: this.state.formData.email,
                 password: this.state.formData.password
             }
+            console.log('form data in submit', userInput)
 
-            var formData = Object.assign({}, this.state.formData);
-            Object.keys(formData).map((key, index) => {
-                formData[key] = '';
-                return ''
-            });
-            this.setState({ formData })
+            // var formData = Object.assign({}, this.state.formData);
+            // Object.keys(formData).map((key, index) => {
+            //     formData[key] = '';
+            //     return ''
+            // });
+            // this.setState({ formData })
 
             login(userInput)
-                .then((response) => {
+                .then(async (response) => {
+                    // if(response.data.data.email === this.state.formData.email  && response.data.data.password === this.state.formData.password ){
                     console.log('login', response.data.data)
                     localStorage.setItem('LoginToken', response.data.data.token)
                     localStorage.setItem('firstname', response.data.data.user.firstname)
@@ -69,15 +74,26 @@ class LoginComponent extends Component {
                     localStorage.setItem('imageurl', response.data.data.user.imageurl)
                     localStorage.setItem('token1', true)
 
-                    this.setState({ snackbaropen: true, snackbarmsg: response.data.message })
-                    if(localStorage.getItem('token1') !== undefined)
-                        this.props.props.history.push('/dashboard')
-                    else
-                        this.props.props.history.push('/')
+                    await this.setState({ snackbaropen: true, snackbarmsg: response.data.message, loggedIn: true })
+                    console.log("in login", this.state.loggedIn);
+                    //  this.renderRedirect()
+                    // if(localStorage.getItem('token1') !== undefined)
+                    // this.props.props.history.push('/dashboard')
+                    // else
+                    // this.props.props.history.push('/')
+                    // }
                 }).catch((errorMessages) => {
                     console.log('login error', errorMessages)
                     this.setState({ snackbaropen: true, snackbarmsg: 'Email is not verified OR Credentials are incorrect' })
                 })
+        }
+    }
+    renderRedirect = () => {
+        console.log("in rediect", this.state.loggedIn);
+
+        if (this.state.loggedIn) {
+            return <Redirect to={{ pathname: '/dashboard' }} />
+            // this.props.props.history.push('/dashboard')
         }
     }
 
@@ -90,89 +106,103 @@ class LoginComponent extends Component {
         this.props.props.history.push('/forgotpass')
     }
 
+    localStorageClear = () =>{
+        localStorage.clear()
+    }
+
     render() {
         return (
-            <div>
-                <Snackbar
-                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    open={this.state.snackbaropen}
-                    autoHideDuration={5000}
-                    onClose={this.snackBarClose}
-                    message={<span id="message-id">{this.state.snackbarmsg}</span>}
-                ></Snackbar>
+            this.state.loggedIn ?
+                (<Redirect
+                    to={{
+                        pathname: "/dashboard",
+                        // state: { from: props.location }
+                    }}
+                />
+                ) : (
+                    <div>
 
-                <Card id="cardidlogin" >
-                    <CardContent>
-                        <Typography variant="h5">
-                            <span className="font-color">F</span>
-                            <span className="font-color">u</span>
-                            <span className="font-color">n</span>
-                            <span className="font-color">d</span>
-                            <span className="font-color">o</span>
-                            <span className="font-color">o</span>
+                        <Snackbar
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                            open={this.state.snackbaropen}
+                            autoHideDuration={5000}
+                            onClose={this.snackBarClose}
+                            message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                        ></Snackbar>
+
+                        <Card id="cardidlogin" >
+                            <CardContent>
+                                <Typography variant="h5">
+                                    <span className="font-color">F</span>
+                                    <span className="font-color">u</span>
+                                    <span className="font-color">n</span>
+                                    <span className="font-color">d</span>
+                                    <span className="font-color">o</span>
+                                    <span className="font-color">o</span>
+                                </Typography>
+                                <Typography variant="h6" component="h2">
+                                    Sign in
                         </Typography>
-                        <Typography variant="h6" component="h2">
-                            Sign in
-                        </Typography>
 
-                        <br />
-
-                        <ValidatorForm
-                            autoComplete="off"
-                            ref="form"
-                            onSubmit={this.handleSubmit}
-                        >
-                            <br />
-                            <TextValidator
-                                label="Email"
-                                onChange={this.handleChange}
-                                name="email"
-                                value={this.state.formData.email}
-                                className="Emaillogin"
-                                validators={['required', 'isEmail']}
-                                errorMessages={['this field is required', 'email is not valid']}
-                            />
-
-                            <br />
-
-                            <TextValidator
-                                label="Password"
-                                onChange={this.handleChange}
-                                name="password"
-                                type='password'
-                                value={this.state.formData.password}
-                                validators={['required']}
-                                className="Password"
-                                errorMessages={['this field is required']}
-                            />
-                            <br />
-                            <div className="CreateAccount">
-                                <button
-                                    className="login-button-letter"
-                                    onClick={this.handleForgetPassword}
+                                <br />
+                                {this.localStorageClear}
+                                <ValidatorForm
+                                    autoComplete="off"
+                                    ref="form"
+                                    onSubmit={this.handleSubmit}
                                 >
-                                    Forgot Password?
-                                </button>
-                            </div>
-                            <br />
+                                    <br />
+                                    <TextValidator
+                                        label="Email"
+                                        onChange={this.handleChange}
+                                        name="email"
+                                        value={this.state.formData.email}
+                                        className="Emaillogin"
+                                        validators={['required', 'isEmail']}
+                                        errorMessages={['this field is required', 'email is not valid']}
+                                    />
 
-                            <div className="LoginButton">
-                                <button
-                                    className="login-button-letter"
-                                    onClick={this.handleRegister}>
-                                    Create account
+                                    <br />
+
+                                    <TextValidator
+                                        label="Password"
+                                        onChange={this.handleChange}
+                                        name="password"
+                                        type='password'
+                                        value={this.state.formData.password}
+                                        validators={['required']}
+                                        className="Password"
+                                        errorMessages={['this field is required']}
+                                    />
+                                    <br />
+                                    <div className="CreateAccount">
+                                        <button
+                                            className="login-button-letter"
+                                            onClick={this.handleForgetPassword}
+                                        >
+                                            Forgot Password?
                                 </button>
-                                <button
-                                    type="submit"
-                                    className="button-letter"
-                                >
-                                    Login
+                                    </div>
+                                    <br />
+
+                                    <div className="LoginButton">
+                                        <button
+                                            className="login-button-letter"
+                                            onClick={this.handleRegister}>
+                                            Create account
                                 </button>
-                            </div>
-                        </ValidatorForm>
-                    </CardContent>
-                </Card>
-            </div>
+                                        <button
+                                            type="submit"
+                                            className="button-letter"
+                                        >
+                                            Login
+                                </button>
+                                    </div>
+                                </ValidatorForm>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )
         );
     }
 }

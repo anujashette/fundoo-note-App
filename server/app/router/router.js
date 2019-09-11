@@ -96,9 +96,11 @@ appRouter.get('/label/readlabel', authObj.isAuthorized, labelController.readLabe
 //  Update label router
 appRouter.put('/label/updatelabel', authObj.isAuthorized, labelController.updateLabelController) 
 
-//  Delete label router
+// Delete label router
 appRouter.post('/label/deletelabel', authObj.isAuthorized, labelController.deleteLabelController)
 
+// 
+appRouter.post('/note/countnotes', authObj.isAuthorized, noteController.noteCount)          
 
 
 module.exports = appRouter;

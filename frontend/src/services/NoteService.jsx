@@ -22,6 +22,16 @@ export function getAllNote() {
         })
 }
 
+export function getNoteCount() {
+    console.log("note count")
+    return axios.post(url + `/note/countnotes`,{},
+        {
+            headers: {
+                token: loginToken
+            }
+        })
+}
+
 export function getSearchNote(searchData) {
     console.log("note search", loginToken)
     return axios.post(url + `/note/readnote?pageNo=${1}&size=${20}`,searchData,
@@ -52,6 +62,18 @@ export function getTrash() {
         }
     })
 }
+
+
+export function getReminder() {
+    console.log("reminder note data", loginToken)
+    return axios.get(url + `/note/readremindernotes?pageNo=${1}&size=${20}`,
+    {
+        headers: {
+            token: loginToken
+        }
+    })
+}
+
 
 export function updateTitle(titleInput) {
     console.log("user data", titleInput)
@@ -101,6 +123,40 @@ export function updateColor(colorInput) {
                 token: loginToken
             }
         })
+}
+
+export function updateReminder(date) {
+    console.log('update label', date)
+    let response = {}
+    axios.put(url + `/note/updatereminder`, date, {
+        headers: {
+            token: loginToken
+        }
+    }).then((reminderRes) => {
+        console.log('update label', reminderRes)
+        response = reminderRes;
+    })
+        .catch((error) => {
+            response = error;
+        })
+    return response
+}
+
+export function deleteRemind(date) {
+    console.log('delete label', date)
+    let response = {}
+    axios.put(url + `/note/deletereminder`, date, {
+        headers: {
+            token: loginToken
+        }
+    }).then((reminderRes) => {
+        console.log('update label', reminderRes)
+        response = reminderRes;
+    })
+        .catch((error) => {
+            response = error;
+        })
+    return response
 }
 
 export function updateNoteLabel(data) {

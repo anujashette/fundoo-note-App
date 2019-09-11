@@ -13,6 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '../assets/grid.svg'
 import List from '../assets/list.svg'
 import Cancel from '@material-ui/icons/Close'
+import ChartComponent from './chartComponent';
 
 class AppBarComponent extends Component {
 
@@ -26,7 +27,8 @@ class AppBarComponent extends Component {
             noteData: [],
             firstPage:1,
             lastPage:1,
-            searchKey:''
+            searchKey:'',
+            chartstate:false
         };
     }
 
@@ -64,6 +66,8 @@ class AppBarComponent extends Component {
         this.props.searchNotes(this.state.searchKey)
     }
 
+
+
     render() {
 
         return (
@@ -100,6 +104,8 @@ class AppBarComponent extends Component {
                                     <img src={List} alt="List" style={{ height: "22px", color: "#9e9d9d" }} />
                                 </Tooltip>}
                             </IconButton>
+                            <ChartComponent/>
+                           
                         </div>
                         <div className="Drop-box">
                             <DropDownComponent
@@ -114,7 +120,10 @@ class AppBarComponent extends Component {
                 handleEditLabel={this.props.handleEditLabel}
                 archiveNotes={this.props.archiveNotes}
                 trashNotes={this.props.trashNotes}
+                reminderNotes={this.props.reminderNotes}
                 />
+
+
             </div>
         );
     }

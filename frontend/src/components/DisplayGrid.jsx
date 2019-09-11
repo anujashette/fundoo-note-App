@@ -11,11 +11,11 @@ import {
 
 
 class DisplayGrid extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       gridCss : "mainnotes-grid",
-      items : [],
+      items : this.props.noteData,
       setItems :[]
     }
   }
@@ -33,21 +33,22 @@ class DisplayGrid extends React.Component {
   }
 
   render() {
-    console.log("safasfasdfsa",this.props.noteData);
+    console.log("safasfasdfsa",this.state.noteData);
 
     if (this.props.noteData) {
 
       var notes =this.props.noteData.map((key, index) => {
         return          (
-        <GridItem key={index}>
+        // <GridItem key={index}>
         <DisplayNote 
         // handleGetNotes={this.props.handleGetNotes}
         viewCss={this.props.viewCss}
         labelData={this.props.labelData}
         Display={this.props.Display}
         handleGetLabel={this.props.handleGetLabel}
-        noteData={key}  />
-        </GridItem >
+        getNotes = {this.props.getNotes}
+        noteData={key}  key={index}/>
+        // </GridItem >
 )
       })
     }
@@ -56,38 +57,38 @@ class DisplayGrid extends React.Component {
     }
 
     return (
-      // <div className="allnotes-div">
+      <div className="allnotes-div">
 
-      //   {this.props.Display ? 
-      //   <div className= "mainnotes-grid"
-      //   // className="mainnotes-list"
-      //   >
-      //     {notes}
-      //   </div>
-      //    :
-      //   <div className="mainnotes-list"
-      //    style={{
-      //     display: "flow-root",
-      //     justifyContent: "stretch"}}
-      //     >
-      //       {notes}
-      //     </div>
-      //     } 
+        {this.props.Display ? 
+        <div className= "mainnotes-grid"
+        // className="mainnotes-list"
+        >
+          {notes}
+        </div>
+         :
+        <div className="mainnotes-list"
+         style={{
+          display: "flow-root",
+          justifyContent: "stretch"}}
+          >
+            {notes}
+          </div>
+          } 
         
 
-      // </div>
+      </div>
 
       
-      <GridContextProvider onChange={this.onChange} >
-      <GridDropZone
-        id="items"
-        boxesPerRow={3}
-        rowHeight={200}
-        style={{ height: "100%" , display:"flex" , justifyContent:"flex-start",flexWrap:"wrap"}}
-      >
-          {notes}
-      </GridDropZone>
-      </GridContextProvider>  
+      // <GridContextProvider onChange={this.onChange} >
+      // <GridDropZone
+      //   id="items"
+      //   boxesPerRow={3}
+      //   rowHeight={200}
+      //   style={{ height: "100%" , display:"flex" , justifyContent:"flex-start",flexWrap:"wrap"}}
+      // >
+      //     {notes}
+      // </GridDropZone>
+      // </GridContextProvider>  
     );
   }
 }

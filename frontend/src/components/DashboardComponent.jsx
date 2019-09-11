@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import AppBarComponent from './AppBarComponent';
 import CreateNoteComponent from './CreateNoteComponent';
 import DisplayGrid from './DisplayGrid';
-import { getAllNote, getAllLabel, getArchive, getTrash, getSearchNote } from '../services/NoteService'
+import { getAllNote, getAllLabel, getArchive, getTrash, getSearchNote, getReminder } from '../services/NoteService'
 import EditLabelComponent from './EditLabelComponent'
+import {Redirect} from 'react-router-dom'
 class DashboardComponent extends Component {
     constructor(props) {
         super(props);
@@ -21,18 +22,16 @@ class DashboardComponent extends Component {
         this.handleGetLabel = this.handleGetLabel.bind(this)
     }
 
-    componentDidMount() {
-        if (!this.state.noteType) {
-            this.handleGetNotes();
-        } else {
-
-        }
+  async  componentDidMount() {
+        // if (!this.state.noteType) {
+          await  this.handleGetNotes();
+        // } 
         this.handleGetLabel()
-
+        // await this.getNotes()
     }
 
     async handleGetNotes() {
-        this.setState({ noteData: [],menuName: 'Fundoo' ,noNotes: 'Your archive notes appear here'})
+        this.setState({ noteData: [],menuName: 'Fundoo',noteType: false ,noNotes: 'Your archive notes appear here'})
 
         await getAllNote()
             .then((response) => {
@@ -70,8 +69,12 @@ class DashboardComponent extends Component {
 
     searchNotes = (searchKey) =>{
         console.log("in dashboard",searchKey);
+        if(searchKey==='')
+        {
+            this.handleGetNotes()
+        }
+        else{
         this.setState({ noteData: []})
-
         let searchData = {searchKey:searchKey}
          getSearchNote(searchData)
             .then((response) => {
@@ -81,7 +84,7 @@ class DashboardComponent extends Component {
             })
             .catch((error) => {
                 console.log('get all note error =====>', error)
-            })
+            })}
     }
 
     trashNotes = () => {
@@ -90,10 +93,21 @@ class DashboardComponent extends Component {
             .then((trashData) => {
                 console.log('trash data', trashData.data.data)
                 this.setState({ noteData: trashData.data.data })
-
             }).catch((error) => {
                 console.log('add label', error)
             })
+    }
+
+    reminderNotes = () =>{
+        this.setState({ noteData: [], noNotes: 'Your reminder notes appear here', noteType: true, menuName: 'Reminder' })
+         getReminder()
+         .then((reminderRes)=>{
+            console.log("reminder response",reminderRes.data.data);
+            this.setState({noteData:reminderRes.data.data})
+
+        }).catch((error)=>{
+            console.log('reminder notes', error)
+        })
     }
 
     getNotes = () => {
@@ -112,7 +126,6 @@ class DashboardComponent extends Component {
 
     handleLabelClose =() =>{
         this.setState({labelEditor:false  ,openLabel:false})
-        // this.handleGetLabel()
     }
 
     gridView = () =>{
@@ -126,46 +139,61 @@ class DashboardComponent extends Component {
     }
     
     render() {
-
+        let dashboard = null
+        if(localStorage.getItem('token1') !== null )
+        {
+            dashboard = (
+                <div>
+                <AppBarComponent
+                menuName={this.state.menuName}
+                labelData={this.state.labelData}
+                handleGetNotes={this.getNotes}
+                handleEditLabel={this.handleEditLabel}
+                archiveNotes={this.archiveNotes}
+                trashNotes={this.trashNotes}
+                gridView={this.gridView}
+                searchNotes={this.searchNotes}
+                reminderNotes={this.reminderNotes}
+                props={this.props.props} />
+    
+            {!this.state.noteType ?
+                <CreateNoteComponent 
+                handleGetNotes={this.getNotes} 
+                labelData={this.state.labelData}/>
+                :
+                <div className="null-div"></div>
+            }
+    
+            {this.state.labelEditor ?
+                <EditLabelComponent
+                handleGetLabel={this.getLabels}
+                    openLabel={this.state.openLabel}
+                    labelData={this.state.labelData}
+                    handleLabelClose={this.handleLabelClose}
+                    >
+                </EditLabelComponent>
+                :
+                null
+            }
+    
+            <DisplayGrid
+                noNotes={this.state.noNotes}
+                noteData={this.state.noteData}
+                labelData={this.state.labelData}
+                Display={this.state.gridview}
+                // handleGetNotes={this.handleGetNotes}
+                handleGetLabel={this.handleGetLabel}
+                getNotes = {this.getNotes}
+                viewCss={this.state.viewCss} />                
+                </div>
+            )
+        }else{
+             dashboard = ( this.props.props.history.push('/')
+                )
+        }
         return (
             <div>
-                <AppBarComponent
-                    menuName={this.state.menuName}
-                    labelData={this.state.labelData}
-                    handleGetNotes={this.getNotes}
-                    handleEditLabel={this.handleEditLabel}
-                    archiveNotes={this.archiveNotes}
-                    trashNotes={this.trashNotes}
-                    gridView={this.gridView}
-                    searchNotes={this.searchNotes}
-                    props={this.props.props} />
-                {!this.state.noteType ?
-                    // {createNote}
-                    <CreateNoteComponent handleGetNotes={this.getNotes} />
-                    :
-                    <div className="null-div"></div>
-                }
-
-                {this.state.labelEditor ?
-                    <EditLabelComponent
-                    handleGetLabel={this.getLabels}
-                        openLabel={this.state.openLabel}
-                        labelData={this.state.labelData}
-                        handleLabelClose={this.handleLabelClose}
-                        >
-                    </EditLabelComponent>
-                    :
-                    null
-                }
-
-                <DisplayGrid
-                    noNotes={this.state.noNotes}
-                    noteData={this.state.noteData}
-                    labelData={this.state.labelData}
-                    Display={this.state.gridview}
-                    handleGetNotes={this.handleGetNotes}
-                    handleGetLabel={this.handleGetLabel}
-                    viewCss={this.state.viewCss} />
+            {dashboard}
             </div>
         );
     }

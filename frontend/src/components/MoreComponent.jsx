@@ -60,6 +60,7 @@ class MoreComponent extends Component {
     }
 
     handleDelete = () => {
+
         console.log('delete noteID::::',this.state.noteState.data.trash,this.state.noteState.id);
         if(this.state.noteState.data.trash){
             this.foreverDelete()
@@ -91,7 +92,6 @@ class MoreComponent extends Component {
             this.restoreNote()
         }
         else{
-            console.log('label update dialog{{{{{{{{}');
             this.setState({ anchorEl: null , openLabel:true });
         }
     }
@@ -120,9 +120,11 @@ class MoreComponent extends Component {
                         noteId={this.state.noteState.id}
                         openLabel={this.state.openLabel} 
                         handleLabelClose={this.handleLabelClose}
-                        changeDisplay={this.props.changeDisplay}
-                        
+                        getNotes = {this.props.getNotes}
                         labels={this.props.labels}
+                        addLabel={this.props.addLabel}
+                        deleteLabel={this.props.deleteLabel}
+                       NoteType={this.props.NoteType}
                         ></LabelComponent>
                     :
                     <Menu
@@ -131,8 +133,14 @@ class MoreComponent extends Component {
                     open={Boolean(this.state.anchorEl)}
                     onClose={this.handleClose}
                 >
-                    <MenuItem onClick={this.handleDelete}>{this.state.firstItem}</MenuItem>
-                    <MenuItem onClick={this.handleAddLabel}>{this.state.secondItem}</MenuItem>
+                    {!this.props.NoteType ?
+                         <MenuItem onClick={this.handleDelete}>{this.state.firstItem}</MenuItem>
+
+                    :
+                        null
+                    }
+                        <MenuItem onClick={this.handleAddLabel}>{this.state.secondItem}</MenuItem>
+
                 </Menu>
                     }
                     </MuiThemeProvider>

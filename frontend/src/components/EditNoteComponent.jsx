@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Dialog, Card, CardContent, InputBase, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import { Dialog, Card, CardContent, InputBase, createMuiTheme, MuiThemeProvider, Chip } from '@material-ui/core';
 import ReminderComponent from './ReminderComponent';
 import ColorComponent from './ColorComponent';
 import ArchiveComponent from './ArchiveComponent';
 import MoreComponent from './MoreComponent';
-import { updateTitle, updateDescription } from '../services/NoteService'
+import { updateTitle, updateDescription, deleteNoteLabel, deleteRemind } from '../services/NoteService'
 const theme = createMuiTheme({
   overrides: {
     MuiDialog: {
@@ -65,7 +65,56 @@ class EditNoteComponent extends Component {
 
   }
 
+  handleDelete = data => () => {
+    let labelData = {
+      noteId: this.state.id,
+      labelId: data._id
+    }
+    console.log('data in dis note label', data._id);
+
+    let deletedLabel = deleteNoteLabel(labelData)
+    console.log("deleted label  ", deletedLabel)
+    this.props.getNotes()
+  };
+
+
+  deleteReminder = data => () => {
+    let Data = {
+        noteId: this.state.id
+    }
+    console.log('data in dis note label', data._id);
+    let deletedreminder = deleteRemind(Data)
+    console.log("deleted label  ", deletedreminder)
+    this.props.getNotes()
+}
+
   render() {
+    const displayLabel = this.state.data.notelabel.map((key, index) => {
+      return (
+        <Chip
+          key={index}
+          label={key.label}
+          onDelete={this.handleDelete(key)}
+          style={{
+            height: "20px", minWidth: "100px"
+          }}
+        />
+      )
+    })
+
+    const displayReminder = this.state.data.reminder.map((key, index) => {
+      return (
+        <Chip
+          key={index}
+          label={key}
+          onDelete={this.deleteReminder(key)}
+          style={{
+            height: "20px", minWidth: "100px"
+          }}
+        />
+      )
+    })
+
     return (
       <div>
         <MuiThemeProvider theme={theme}>
@@ -103,13 +152,22 @@ class EditNoteComponent extends Component {
                     style={{ color: "#434343", fontSize: "15px" }}
                   >
                   </InputBase>
+                  <div className="label-div" >
+                    {displayLabel}
+                  </div>
+                  <div className="label-div" >
+                    {displayReminder}
+                  </div>
                   <div className="Icon-div">
 
-                    <ReminderComponent />
-                    <ColorComponent selectColor={this.selectColor} />
+                    <ReminderComponent id={this.state.id} getNotes={this.props.getNotes} />
+                    <ColorComponent selectColor={this.selectColor} id = {this.state.id}/>
                     <ArchiveComponent parentState={this.state} handleGetNotes={this.props.handleGetNotes} />
                     <MoreComponent
-
+                      changeDisplay={this.props.changeDisplay}
+                      noteState={this.state}
+                      getNotes={this.props.getNotes}
+                      labels={this.props.labels}
                     />
 
                     <button className="close-button" style={{ background: this.state.data.color }}

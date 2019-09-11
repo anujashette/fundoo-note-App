@@ -62,7 +62,7 @@ class DrawerComponent extends Component {
     }
  
     handleReminder = () =>{
-
+        this.props.reminderNotes()
     }
 
     handleEditLabel = () =>{
@@ -130,6 +130,7 @@ class DrawerComponent extends Component {
                     </ListItem>
 
                 <Divider />
+
                 <div className="Label-margin">
                     <label className="List-item-text">LABELS</label>
                 </div>
