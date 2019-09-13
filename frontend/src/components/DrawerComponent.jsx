@@ -70,9 +70,6 @@ class DrawerComponent extends Component {
     }
 
     handleArchive = () =>{
-        // this.setState({
-        //     onClickCss:"menu-css"
-        // })
         this.props.archiveNotes()
     }
 

@@ -58,12 +58,10 @@ class ColorComponent extends Component {
                     console.log('color error', error);
                 })
         }
-
     };
 
     render() {
         const color = this.state.colorArray.map((key, index) => {
-
             return (
                 <Avatar style={{
                     margin: "1px",

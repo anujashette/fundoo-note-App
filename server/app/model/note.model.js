@@ -9,10 +9,13 @@
  ******************************************************************************/
 const mongoose = require('mongoose')
 const log = require('../logfile/logger')
-
+const gcm = require("node-gcm")
+require('dotenv').config()
 /**
  * Note Schema is created to store data in database
  */
+
+
 const noteSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -71,7 +74,7 @@ Note.prototype.createNote = async (addField, userId) => {
         let addNote = new note({
             userId: userId,
             title: addField.title,
-            description: addField.description ,
+            description: addField.description,
             reminder: addField.reminder,
             notecolor: addField.notecolor,
             archive: addField.archive,
@@ -80,8 +83,8 @@ Note.prototype.createNote = async (addField, userId) => {
 
         let saveNote = await addNote.save()
         // await client.set('note' + saveNote.id, JSON.stringify(saveNote), redis.print)
-        console.log('des in model====>',saveNote);
-        
+        console.log('des in model====>', saveNote);
+
         return saveNote
     }
     catch (err) {
@@ -96,38 +99,39 @@ Note.prototype.createNote = async (addField, userId) => {
  * @description Read note from database using noteId/search by title,description,color,reminder/userID
  ***************************************************************************************************** 
  */
-Note.prototype.readNote = async (param,count) => {
+Note.prototype.readNote = async (param, count) => {
     try {
-        var totalPages ={}
+        var totalPages = {}
         var readData = {}
         console.log('Read Note Model ===>', count)
-        if (param.noteId !== undefined ) {
-             readData = await note.find({ '_id': param.noteId }).populate('notelabel')
+        if (param.noteId !== undefined) {
+            readData = await note.find({ '_id': param.noteId }).populate('notelabel')
             // await client.set('readBynote' + param.noteId, JSON.stringify(readData), redis.print)
         }
         else if (param.searchKey) {
-             readData = await note.find
+            readData = await note.find
                 ({
-                   $and: [{$or:
-                        [
-                            { 'title': { $regex: param.searchKey, $options: 'i' } },
-                            { 'description': { $regex: param.searchKey, $options: 'i' } },
-                            // { 'notecolor': { $regex: param.searchKey, $options: 'i' } },
-                            { 'reminder': { $regex: param.searchKey, $options: 'i' } },
-                        ]},
-                        {'trash':false}
+                    $and: [{
+                        $or:
+                            [
+                                { 'title': { $regex: param.searchKey, $options: 'i' } },
+                                { 'description': { $regex: param.searchKey, $options: 'i' } },
+                                // { 'notecolor': { $regex: param.searchKey, $options: 'i' } },
+                                { 'reminder': { $regex: param.searchKey, $options: 'i' } },
+                            ]
+                    },
+                    { 'trash': false }
                     ]
                 }).populate('notelabel')
         }
-        else if(count)
-        {
+        else if (count) {
             // totalPages.totalCount = await note.countDocuments({ "userId": param.userId })
-            totalPages.noteCount = await note.countDocuments({ $and: [{ "userId": param.userId },{ 'trash': false, 'archive': false }] })
-            totalPages.reminderCount = await note.countDocuments({ $and: [{ "userId": param.userId },{ "reminder": { $ne: [] } }] })
-            totalPages.archiveCount = await note.countDocuments({ $and: [{ "userId": param.userId },{'archive': true}] })
-            totalPages.trashCount = await note.countDocuments({ $and: [{ "userId": param.userId },{'trash': true}] })
-            console.log("calulated notes",totalCount);
-            
+            totalPages.noteCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { 'trash': false, 'archive': false }] })
+            totalPages.reminderCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { "reminder": { $ne: [] } }] })
+            totalPages.archiveCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { 'archive': true }] })
+            totalPages.trashCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { 'trash': true }] })
+            console.log("calulated notes", totalCount);
+
         }
         else {
             console.log('userId===>', param)
@@ -135,7 +139,7 @@ Note.prototype.readNote = async (param,count) => {
             readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
             console.log('read stringify in model====================================', JSON.stringify(param.field))
 
-            await client.set('readAllBy'+JSON.stringify(param.field), JSON.stringify(readData), redis.print)
+            await client.set('readAllBy' + JSON.stringify(param.field), JSON.stringify(readData), redis.print)
             totalPages = parseInt(Math.ceil(totalCount / parseInt(param.size)))
         }
         if (readData != '') {
@@ -163,12 +167,12 @@ Note.prototype.readNote = async (param,count) => {
 Note.prototype.updateNote = async (updateField, noteId) => {
     try {
         console.log('Update note Model ===>', updateField, noteId)
-        client.flushdb( function (err, succeeded) {
+        client.flushdb(function (err, succeeded) {
             console.log(succeeded); // will be true if successfull
         });
-        
+
         let updateData = await note.findOneAndUpdate({ '_id': noteId }, updateField)
-        await client.set('updateAllBy'+JSON.stringify(updateField), JSON.stringify(updateData), redis.print)
+        await client.set('updateAllBy' + JSON.stringify(updateField), JSON.stringify(updateData), redis.print)
 
         if (!updateData) {
             let error = { error: 'Note is not updated' }
@@ -211,6 +215,48 @@ Note.prototype.deleteNote = async (noteId) => {
         return error
     }
 }
+
+setInterval(
+    async function () {
+        try {
+            let res = await note.find({}).populate('userId')
+            for (let i = 0; i < res.length; i++) {
+                if (res[i].userId.notificationlink && res[i].reminder.length > 0) {
+                    let currentDate = new Date()
+                    currentDate = Date.parse(currentDate)
+                    let reminder = res[i].reminder[0]
+                    let parseDate = Date.parse(reminder)
+                    // console.log(process.env.firebaseApiKey)
+                    console.log(' parseDate==',parseDate-1000,"current time==",currentDate,' parseDate==',parseDate+1000);
+                    
+                    if (currentDate > parseDate - 1000 && currentDate < parseDate + 1000) {
+
+                    var message = new gcm.Message({
+                        data: { key1: 'hello' },
+                        notification: {
+                            title: 'Fundoo reminder',
+                            body: res[i].title
+                        }
+                    });
+                        console.log('final condition', res[i].userId.notificationlink)
+                        let sender = gcm.Sender(process.env.firebaseApiKey)
+                        sender.send(message, res[i].userId.notificationlink, function (err, response) {
+                            if (err) {
+                                console.log("error in firebase", err);
+                            }
+                            else {
+                                console.log("respose from firebase", response);
+                            }
+                        })
+                    }
+                }
+            }
+        }
+        catch (error) {
+            console.log('error', error);
+        }
+    }
+    , 3000);
 
 const noteModelObj = new Note()
 module.exports = noteModelObj

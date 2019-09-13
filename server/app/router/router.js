@@ -16,6 +16,8 @@ const authObj = require('../middleware/authorization')
 
 var appRouter = express.Router();
 
+
+
 //  Default router
 appRouter.get("/", function (req, res) {                                               
   res.status(200).send("Welcome to our restful fundoo API");

@@ -271,3 +271,18 @@ export function deleteLabel(labelId) {
         })
     return response
 }
+
+export function firebaseToken(noteId){
+    axios.put(url+`/user/notificationlink`,noteId,
+    {
+        headers:{
+            token:loginToken
+        }
+    })
+    .then((response)=>{
+        console.log("response from notify token",response);
+    })
+    .catch((error)=>{
+        console.log("response from notify token",error);
+    })
+}

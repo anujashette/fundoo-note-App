@@ -33,8 +33,6 @@ require('dotenv').config()
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/swagger',swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-
-
 /**
  * Express validator validate request body used throughout application
  */

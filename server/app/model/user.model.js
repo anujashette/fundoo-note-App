@@ -57,6 +57,7 @@ const userObj = mongoose.model('user', userSchema);
 
 function User() { }
 
+
 /**
  * @param body
  * @description Registration model save all user data  

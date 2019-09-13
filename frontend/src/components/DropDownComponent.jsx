@@ -84,17 +84,18 @@ class DropDownComponent extends React.Component {
     profileChange(formData, config)
       .then((response) => {
         console.log('s3 API link', response.data.data);
-        this.setState({
-          imageUrl: response.data.data
-        })
+        localStorage.setItem('imageurl',response.data.data)
+        // this.setState({
+        //   imageUrl: response.data.data
+        // })
       }).catch((error) => {
       })
   }
 
   componentDidMount = () => {
-    if (localStorage.getItem('imageurl') !== undefined) {
+    // if (localStorage.getItem('imageurl')) {
       this.setState({ imageUrl: localStorage.getItem('imageurl') })
-    }
+    // }
     let letter = localStorage.getItem('firstname')
     if(localStorage.getItem('token1') !== undefined){
       console.log('First name letter', letter.charAt(0).toUpperCase())
