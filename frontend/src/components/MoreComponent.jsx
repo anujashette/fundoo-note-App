@@ -124,7 +124,7 @@ class MoreComponent extends Component {
                         labels={this.props.labels}
                         addLabel={this.props.addLabel}
                         deleteLabel={this.props.deleteLabel}
-                       NoteType={this.props.NoteType}
+                        NoteType={this.props.NoteType}
                         ></LabelComponent>
                     :
                     <Menu

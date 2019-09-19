@@ -100,6 +100,19 @@ class DisplayNote extends Component {
         this.props.getNotes()
     }    
 
+    onMouseEnterHandler = () => {
+        this.setState({
+            isHover: true
+        });
+    }
+
+    onMouseLeaveHandler = () => {
+        this.setState({
+            isHover: false
+        });
+    }
+
+
     render() {
         console.log("NOTE DATA in display note ", this.props.noteData.notelabel)
         const displayLabel = this.props.noteData.notelabel.map((key, index) => {

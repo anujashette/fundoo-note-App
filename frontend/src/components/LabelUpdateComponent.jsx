@@ -17,11 +17,9 @@ class LabelUpdateComponent extends Component {
         }
     }
 
-
     componentDidMount(){
         this.props.handleGetLabel()
     }
-
 
     labelDelete = () => {
         let labeId = {
@@ -73,7 +71,6 @@ class LabelUpdateComponent extends Component {
             <div>
                 <div onMouseEnter={this.onMouseEnterHandler} onMouseLeave={this.onMouseLeaveHandler}>
                     <ListItem
-
                         // onClick={this.handleEditLabel} 
                         // className={this.state.onClickCss}
                         style={{ cursor: "pointer", display: "flex" }}>

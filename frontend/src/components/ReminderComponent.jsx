@@ -23,6 +23,7 @@ const theme = createMuiTheme({
         }
     }
 })
+
 class ReminderComponent extends Component {
     constructor(props) {
         super(props)

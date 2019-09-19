@@ -63,7 +63,6 @@ export function getTrash() {
     })
 }
 
-
 export function getReminder() {
     console.log("reminder note data", loginToken)
     return axios.get(url + `/note/readremindernotes?pageNo=${1}&size=${20}`,

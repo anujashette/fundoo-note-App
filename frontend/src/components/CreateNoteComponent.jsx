@@ -217,7 +217,6 @@ class CreateNoteComponent extends Component {
                                             addLabel={this.addLabel}
                                             deleteLabel={this.deleteLabel}
                                         />
-
                                         <button className="close-button" onClick={this.handleClose} style={{ background: this.state.notecolor }}>Close</button>
                                     </div>
                                 </div>
