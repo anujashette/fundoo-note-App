@@ -96,12 +96,12 @@ class AppBarComponent extends Component {
 
                             <IconButton onClick={this.handleGrid}>
                                  {this.state.gridview ?
-                                <Tooltip title="Grid view">
-                                    <img src={Grid} alt="Grid" style={{ height: "22px", color: "#9e9d9d" }} />
+                                <Tooltip title="List view">
+                                    <img src={List} alt="Grid" style={{ height: "22px", color: "#9e9d9d" }} />
                                 </Tooltip>
                                 :
-                                <Tooltip title="List view">
-                                    <img src={List} alt="List" style={{ height: "22px", color: "#9e9d9d" }} />
+                                <Tooltip title="Grid view">
+                                    <img src={Grid} alt="List" style={{ height: "22px", color: "#9e9d9d" }} />
                                 </Tooltip>}
                             </IconButton>
                             <ChartComponent/>

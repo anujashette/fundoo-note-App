@@ -2,12 +2,12 @@
     "swagger": "2.0",
     "info": {
         "title": "Fundoo Notes Swagger",
-      "description": "This is a fundoo notes swagger to access rest API server ",
-      "version": "1.0.0",
-      "license": {
-        "name": "MIT",
-        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-      }
+        "description": "This is a fundoo notes swagger to access rest API server ",
+        "version": "1.0.0",
+        "license": {
+            "name": "MIT",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
     },
     "host": "localhost:6006",
     "basePath": "/",
@@ -25,5 +25,207 @@
     ],
     "produces": [
         "application/json"
-    ]
+    ],
+    "paths": {
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "description": "Create new user account",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User registration",
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New user account is created",
+                        "schema": {
+                            "$ref": "#/definitions/user1"
+                        }
+                    }
+                }
+            },
+            "/user/login": {
+                "post": {
+                    "tags": [
+                        "User"
+                    ],
+                    "description": "Create new user account",
+                    "parameters": [
+                        {
+                            "name": "user",
+                            "in": "body",
+                            "description": "User registration",
+                            "schema": {
+                                "$ref": "#/definitions/user"
+                            }
+                        }
+                    ],
+                    "produces": [
+                        "application/json"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "New user account is created",
+                            "schema": {
+                                "$ref": "#/definitions/user1"
+                            }
+                        }
+                    }
+                }
+            }    
+        },
+        "/note/addnote": {
+            "post": {
+                "tags": [
+                    "Note"
+                ],
+                "description": "Create new note",
+                "parameters": [
+                    {
+                        "name": "note",
+                        "in": "body",
+                        "description": "Create note",
+                        "schema": {
+                            "$ref": "#/definitions/note"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New note is created",
+                        "schema": {
+                            "$ref": "#/definitions/note"
+                        }
+                    }
+                }
+            }
+        },
+        "/label/addlabel": {
+            "post": {
+                "tags": [
+                    "Label"
+                ],
+                "description": "Create new user account",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User registration",
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New user account is created",
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "user": {
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "unique": true
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "user1": {
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "confirmed": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "__v": {
+                    "type": "integer"
+                }
+            }
+        },
+        "note": {
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "reminder": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "notecolor": {
+                    "type": "string"
+                },
+                "archive": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "trash": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "notelabel": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
 }

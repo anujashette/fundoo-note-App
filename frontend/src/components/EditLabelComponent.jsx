@@ -12,8 +12,9 @@ const theme = createMuiTheme({
     overrides: {
         MuiDialog: {
             paperWidthSm: {
-                "width": " 50%",
-                "height":"20%",
+                "width": " auto",
+                "height":"auto",
+                "max-width":"300px",
                 "border-radius": "10px"
             }
         },
@@ -33,7 +34,7 @@ class EditLabelComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            openLabel: props.openLabel,
+            openLabel: true,
             label: '',
             labelArray: this.props.labelData,
             labelEditor:false,
@@ -73,6 +74,8 @@ class EditLabelComponent extends Component {
     }
 
     render() {
+        console.log("EditLabelComponent");
+        
         if (this.state.labelArray) {
             var labels = this.state.labelArray.map((key, index) => {
                 if (!key.isDeleted) {
@@ -90,12 +93,11 @@ class EditLabelComponent extends Component {
         return (
             <div>
                 <MuiThemeProvider theme={theme}>
-
                 <Dialog
                     open={this.state.openLabel}
                     onClose={this.props.handleLabelClose}
                     aria-labelledby="form-dialog-title"
-                    style={{height:"10px"}}
+                    // style={{height:"10px"}}
                 >
                     <div className="edit-label-1">
                         <DialogContent>Edit labels</DialogContent>
@@ -124,7 +126,7 @@ class EditLabelComponent extends Component {
                             <ListItem
                             style={{ cursor: "pointer", display: "flex" }}>
 
-                            <ListItemIcon ><p/></ListItemIcon>
+                            {/* <ListItemIcon ><p/></ListItemIcon> */}
 
                             <InputBase
                                 multiline
@@ -135,11 +137,11 @@ class EditLabelComponent extends Component {
                                 type="label"
                                 style={{ color: "#434343", fontSize: "15px", padding: "5px" }}
                             ></InputBase>
-                            <ListItemIcon><p/></ListItemIcon>
+                            {/* <ListItemIcon><p/></ListItemIcon> */}
 
                         </ListItem>  
                         }
-                        <div className="labels-div">
+                        <div className="label-edit-div">
                             {labels}
                         </div>
                     </div>

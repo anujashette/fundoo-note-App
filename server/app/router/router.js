@@ -101,8 +101,12 @@ appRouter.put('/label/updatelabel', authObj.isAuthorized, labelController.update
 // Delete label router
 appRouter.post('/label/deletelabel', authObj.isAuthorized, labelController.deleteLabelController)
 
-// 
+// Notes count router
 appRouter.post('/note/countnotes', authObj.isAuthorized, noteController.noteCount)          
 
+// Search notes
+appRouter.post('/note/searchnotes', authObj.isAuthorized, noteController.searchController)         
+// Find latest notes
+appRouter.post('/note/latestnotes', authObj.isAuthorized, noteController.latestNotes)          
 
 module.exports = appRouter;

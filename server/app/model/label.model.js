@@ -38,7 +38,7 @@ function Label(){ }
  * @description Create label in database using userId 
  ****************************************************************************************************
  */
-Label.prototype.createLabel=async(addField)=>{
+Label.prototype.create=async(addField)=>{
     try {
         console.log('Create label Model ===>', addField)
             let addLabel = new label({
@@ -61,7 +61,7 @@ Label.prototype.createLabel=async(addField)=>{
  * @description Read Labels from database using userID
  ***************************************************************************************************** 
  */
-Label.prototype.readLabel=async(getField)=>{
+Label.prototype.read=async(getField)=>{
     try{
         console.log('Read label model===>',getField);
         readData = await label.find({'userId': getField.userId})
@@ -86,7 +86,7 @@ Label.prototype.readLabel=async(getField)=>{
  * @description Update label into database using labelId
  *****************************************************************************************************
  */
-Label.prototype.updateLabel=async(updateField)=>{
+Label.prototype.update=async(updateField)=>{
     try {
         console.log('Update label Model ===>', updateField)
 
@@ -112,7 +112,7 @@ Label.prototype.updateLabel=async(updateField)=>{
  * @description delete label from database using labelId
  *****************************************************************************************************
  */
-Label.prototype.deleteLabel=async(deleteField)=>{
+Label.prototype.delete=async(deleteField)=>{
 
     try {
         console.log('Delete label Model ===>', deleteField)

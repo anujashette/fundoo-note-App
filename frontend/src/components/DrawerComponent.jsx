@@ -115,13 +115,13 @@ class DrawerComponent extends Component {
 
             <div className="Menu-label">
                 <List>
-                    <ListItem onClick={this.handleNotes} className={this.state.onClickCss} style={{  cursor: "pointer"}}>
+                    <ListItem onClick={this.handleNotes} className="item-div" style={{  cursor: "pointer"}}>
                         <ListItemIcon>
                             <img src={Bulb} alt="dfgf" />
                         </ListItemIcon>
                         <ListItemText primary="Notes" />
                     </ListItem>
-                    <ListItem onClick={this.handleReminder} className={this.state.onClickCss} style={{cursor: "pointer"}}>
+                    <ListItem onClick={this.handleReminder} className="item-div" style={{cursor: "pointer"}}>
                         <ListItemIcon> <Notification /></ListItemIcon>
                         <ListItemText primary="Reminders" />
                     </ListItem>
@@ -135,16 +135,16 @@ class DrawerComponent extends Component {
                 {/* Call to function to display labls as per created */}
                     {labels}
 
-                <ListItem onClick={this.handleEditLabel} className={this.state.onClickCss} style={{cursor: "pointer"}}>
+                <ListItem onClick={this.handleEditLabel} className="item-div" style={{cursor: "pointer"}}>
                     <ListItemIcon><EditOutline /></ListItemIcon>
                     <ListItemText primary="Edit Labels" />
                 </ListItem>
                 <Divider />
-                    <ListItem onClick={this.handleArchive} className={this.state.onClickCss} style={{cursor: "pointer"}}>
+                    <ListItem onClick={this.handleArchive} className="item-div" style={{cursor: "pointer"}}>
                         <ListItemIcon > <Archive /> </ListItemIcon>
                         <ListItemText primary="Archive" />
                     </ListItem>
-                    <ListItem onClick={this.handleTrash} className={this.state.onClickCss} style={{cursor: "pointer",margin: "0px 0px 70px 0px"}}>
+                    <ListItem onClick={this.handleTrash} className="item-div" style={{cursor: "pointer",margin: "0px 0px 70px 0px"}}>
                         <ListItemIcon> <Trash /></ListItemIcon>
                         <ListItemText primary="Bin" />
                     </ListItem>

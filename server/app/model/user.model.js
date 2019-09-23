@@ -57,12 +57,12 @@ const userObj = mongoose.model('user', userSchema);
 
 function User() { }
 
-
 /**
  * @param body
  * @description Registration model save all user data  
  */
-User.prototype.register = async (body) => {
+
+User.prototype.create = async (body) => {
     log.logger.info(body)
     try {
         data = await userObj.find({ 'email': body.email })
@@ -104,8 +104,11 @@ User.prototype.register = async (body) => {
                     emailToken = await genTokenObj.genToken(newUser)    //Generate token
                     url = process.env.emailurl + emailToken;
                     log.logger.info(url)
-
-                    mailObj.mailer(url, newUser.email)
+                    let mailContents = {
+                        subject:'Fundoo Notes Verify Email...!',
+                        html:`To verify your account click on this link\n\n'<a href="${url}">${url}</a>"`
+                    }
+                    mailObj.mailer(newUser.email,mailContents)
                     response.message = 'Link is send to your email'
                     response.data = saveUser
                 }
@@ -145,7 +148,7 @@ User.prototype.login = async (body) => {
                 if (data.confirmed) {
                     let token = await genTokenObj.genToken(data)
                    await client.set('user'+data.id,token,redis.print)    
-
+                        
                     response.message = 'Login successful'
                     response.data = {
                         token:token,
@@ -216,7 +219,11 @@ User.prototype.forgetPass = async (body) => {
             let emailToken = await genTokenObj.genToken(data)
             let url = process.env.reserurl + emailToken;
             log.logger.info( url)
-            mailObj.mailer(url, data.email)
+            let mailContents = {
+                subject:'Fundoo Notes account recovery...!',
+                html:`To recover account click on this link\n\n'<a href="${url}">${url}</a>"`
+            }
+            mailObj.mailer(data.email,mailContents)
             response.message = 'Reset password link is sent to your email'
         }
         else {

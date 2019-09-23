@@ -11,10 +11,10 @@ const mongoose = require('mongoose')
 const log = require('../logfile/logger')
 const gcm = require("node-gcm")
 require('dotenv').config()
+const redisObj = require('../../utility/RedisOperations')
 /**
  * Note Schema is created to store data in database
  */
-
 
 const noteSchema = mongoose.Schema({
     userId: {
@@ -66,10 +66,9 @@ function Note() { }
  * @description Create note in database using userId 
  ****************************************************************************************************
  */
-Note.prototype.createNote = async (addField, userId) => {
+Note.prototype.create = async (addField, userId) => {
     try {
         console.log('Create Note Model ===>', addField)
-        // data = await note.find({ 'title': addField.title })
 
         let addNote = new note({
             userId: userId,
@@ -81,11 +80,11 @@ Note.prototype.createNote = async (addField, userId) => {
             notelabel: addField.notelabel
         })
 
-        let saveNote = await addNote.save()
-        // await client.set('note' + saveNote.id, JSON.stringify(saveNote), redis.print)
-        console.log('des in model====>', saveNote);
+        let note = await addNote.save()
+        // await client.set('note' + note.id, JSON.stringify(note), redis.print)
+        console.log('des in model====>', note);
 
-        return saveNote
+        return note
     }
     catch (err) {
         log.logger.error('Create Note error==>', err)
@@ -99,57 +98,27 @@ Note.prototype.createNote = async (addField, userId) => {
  * @description Read note from database using noteId/search by title,description,color,reminder/userID
  ***************************************************************************************************** 
  */
-Note.prototype.readNote = async (param, count) => {
+Note.prototype.read = async (param) => {
     try {
-        var totalPages = {}
-        var readData = {}
-        console.log('Read Note Model ===>', count)
-        if (param.noteId !== undefined) {
-            readData = await note.find({ '_id': param.noteId }).populate('notelabel')
-            // await client.set('readBynote' + param.noteId, JSON.stringify(readData), redis.print)
-        }
-        else if (param.searchKey) {
-            readData = await note.find
-                ({
-                    $and: [{
-                        $or:
-                            [
-                                { 'title': { $regex: param.searchKey, $options: 'i' } },
-                                { 'description': { $regex: param.searchKey, $options: 'i' } },
-                                // { 'notecolor': { $regex: param.searchKey, $options: 'i' } },
-                                { 'reminder': { $regex: param.searchKey, $options: 'i' } },
-                            ]
-                    },
-                    { 'trash': false }
-                    ]
-                }).populate('notelabel')
-        }
-        else if (count) {
-            // totalPages.totalCount = await note.countDocuments({ "userId": param.userId })
-            totalPages.noteCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { 'trash': false, 'archive': false }] })
-            totalPages.reminderCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { "reminder": { $ne: [] } }] })
-            totalPages.archiveCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { 'archive': true }] })
-            totalPages.trashCount = await note.countDocuments({ $and: [{ "userId": param.userId }, { 'trash': true }] })
-            console.log("calulated notes", totalCount);
-
+        let readData = []
+        console.log("param in read note", param);
+        if (param.latest) {
+            readData = await note.find(param.query).sort({ 'updatedAt': -1 }).limit(10).populate('notelabel')
         }
         else {
-            console.log('userId===>', param)
-            var totalCount = await note.countDocuments({ $and: [{ "userId": param.userId }, param.field] })
-            readData = await note.find({ $and: [{ "userId": param.userId }, param.field] }, {}, param.query).populate('notelabel')
-            console.log('read stringify in model====================================', JSON.stringify(param.field))
-
-            await client.set('readAllBy' + JSON.stringify(param.field), JSON.stringify(readData), redis.print)
-            totalPages = parseInt(Math.ceil(totalCount / parseInt(param.size)))
+            readData = await note.find(param.query).sort({ '_id': -1 }).populate('notelabel')
         }
+
         if (readData != '') {
-            let data = { readData: readData, totalPages: totalPages }
+            let data = { readData: readData }
+            console.log("ALL NOTES==================>", data);
             return data
         }
         else {
-            let error = { error: 'Note is not found to read' }
+            let error = { error: 'Notes are not found to read' }
             return error
         }
+
     }
     catch (err) {
         log.logger.error('Read Note error==>', err)
@@ -164,12 +133,12 @@ Note.prototype.readNote = async (param, count) => {
  * @description Update note in database using noteId
  *****************************************************************************************************
  */
-Note.prototype.updateNote = async (updateField, noteId) => {
+Note.prototype.update = async (updateField, noteId) => {
     try {
         console.log('Update note Model ===>', updateField, noteId)
-        client.flushdb(function (err, succeeded) {
-            console.log(succeeded); // will be true if successfull
-        });
+        // client.flushdb(function (err, succeeded) {
+        //     console.log(succeeded); // will be true if successfull
+        // });
 
         let updateData = await note.findOneAndUpdate({ '_id': noteId }, updateField)
         await client.set('updateAllBy' + JSON.stringify(updateField), JSON.stringify(updateData), redis.print)
@@ -194,7 +163,7 @@ Note.prototype.updateNote = async (updateField, noteId) => {
  * @description Delete note in database using noteId
  *****************************************************************************************************
  */
-Note.prototype.deleteNote = async (noteId) => {
+Note.prototype.delete = async (noteId) => {
     try {
         console.log('Delete note Model ===>', noteId)
         let deletedData = note.findByIdAndRemove(
@@ -216,47 +185,47 @@ Note.prototype.deleteNote = async (noteId) => {
     }
 }
 
-setInterval(
-    async function () {
-        try {
-            let res = await note.find({}).populate('userId')
-            for (let i = 0; i < res.length; i++) {
-                if (res[i].userId.notificationlink && res[i].reminder.length > 0) {
-                    let currentDate = new Date()
-                    currentDate = Date.parse(currentDate)
-                    let reminder = res[i].reminder[0]
-                    let parseDate = Date.parse(reminder)
-                    // console.log(process.env.firebaseApiKey)
-                    console.log(' parseDate==',parseDate-1000,"current time==",currentDate,' parseDate==',parseDate+1000);
-                    
-                    if (currentDate > parseDate - 1000 && currentDate < parseDate + 1000) {
+// setInterval(
+//     async function () {
+//         try {
+//             let res = await note.find({}).populate('userId')
+//             for (let i = 0; i < res.length; i++) {
+//                 if (res[i].userId.notificationlink && res[i].reminder.length > 0) {
+//                     let currentDate = new Date()
+//                     currentDate = Date.parse(currentDate)
+//                     let reminder = res[i].reminder[0]
+//                     let parseDate = Date.parse(reminder)
+//                     // console.log(process.env.firebaseApiKey)
+//                     console.log(' parseDate==', parseDate - 1000, "current time==", currentDate, ' parseDate==', parseDate + 1000);
 
-                    var message = new gcm.Message({
-                        data: { key1: 'hello' },
-                        notification: {
-                            title: 'Fundoo reminder',
-                            body: res[i].title
-                        }
-                    });
-                        console.log('final condition', res[i].userId.notificationlink)
-                        let sender = gcm.Sender(process.env.firebaseApiKey)
-                        sender.send(message, res[i].userId.notificationlink, function (err, response) {
-                            if (err) {
-                                console.log("error in firebase", err);
-                            }
-                            else {
-                                console.log("respose from firebase", response);
-                            }
-                        })
-                    }
-                }
-            }
-        }
-        catch (error) {
-            console.log('error', error);
-        }
-    }
-    , 3000);
+//                     if (currentDate > parseDate - 1000 && currentDate < parseDate + 1000) {
+
+//                         var message = new gcm.Message({
+//                             data: { key1: 'hello' },
+//                             notification: {
+//                                 title: 'Fundoo reminder',
+//                                 body: res[i].title
+//                             }
+//                         });
+//                         console.log('final condition', res[i].userId.notificationlink)
+//                         let sender = gcm.Sender(process.env.firebaseApiKey)
+//                         sender.send(message, res[i].userId.notificationlink, function (err, response) {
+//                             if (err) {
+//                                 console.log("error in firebase", err);
+//                             }
+//                             else {
+//                                 console.log("respose from firebase", response);
+//                             }
+//                         })
+//                     }
+//                 }
+//             }
+//         }
+//         catch (error) {
+//             console.log('error', error);
+//         }
+//     }
+//     , 3000);
 
 const noteModelObj = new Note()
 module.exports = noteModelObj

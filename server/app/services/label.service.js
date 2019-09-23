@@ -18,11 +18,11 @@ function LabelService() { }
  * back to addNoteController
  ****************************************************************************************************
  */
-LabelService.prototype.addLabelServ = async (addField) => {
+LabelService.prototype.addLabelServ =  (addField) => {
     console.log('Label add Service ===>', addField)
 
     let CreatResponse = {}
-    let createdLabel = await labelModelObj.createLabel(addField)
+    let createdLabel =  labelModelObj.create(addField)
 
     if (createdLabel.error) {
         CreatResponse.status = false
@@ -48,7 +48,7 @@ LabelService.prototype.readLabelServ = async (readField) => {
     console.log('Read label Service ===>',readField)
 
     let readResponse = {}
-    let getLabel = await labelModelObj.readLabel(readField)
+    let getLabel = await labelModelObj.read(readField)
 
     if (getLabel.error) {
         readResponse.status = false
@@ -63,17 +63,17 @@ LabelService.prototype.readLabelServ = async (readField) => {
 }
 
 /****************************************************************************************************
- * @param updateField
  * @description pass label name and label id to model after callback service receives updated data or
  * error and send back to updateLabelController
+ * @param {object} updateField Labels fields to be updated. `label` name  
  ****************************************************************************************************
  */
-LabelService.prototype.updateLabelServ=async (updateField) =>{
+LabelService.prototype.updateLabelServ= (updateField) =>{
     console.log('Update label Service ===>', updateField)
 
     updateField.field = { label: updateField.label }
     let updateLabelRes = {}
-    let updatedLabel = await labelModelObj.updateLabel(updateField)
+    let updatedLabel =  labelModelObj.update(updateField)
 
     if (updatedLabel.error) {
         updateLabelRes.status = false
@@ -93,11 +93,11 @@ LabelService.prototype.updateLabelServ=async (updateField) =>{
  * error and send back to deleteLabelServ
  ****************************************************************************************************
  */
-LabelService.prototype.deleteLabelServ=async (deleteField) =>{
+LabelService.prototype.deleteLabelServ= (deleteField) =>{
     console.log('Update label Service ===>', deleteField)
 
     let deleteLabelRes = {}
-    let deletedLabel = await labelModelObj.deleteLabel(deleteField)
+    let deletedLabel =  labelModelObj.delete(deleteField)
 
     if (deletedLabel.error) {
         deleteLabelRes.status = false

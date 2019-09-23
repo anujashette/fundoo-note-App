@@ -11,7 +11,8 @@
 const noteServObj = require('../services/note.service')
 const log = require('../logfile/logger')
 const pageListObj = require('../middleware/pagination')
-
+const async = require('async')
+const redisObj = require('../../utility/RedisOperations')
 
 function NoteController() { }
 
@@ -35,7 +36,7 @@ NoteController.prototype.addNoteController = async (req, res) => {
                 note: req.body,
                 userId: req.token.payload.id
             }
-            console.log('Create Note Contrller ===>',addParam.note)
+            console.log('Create Note Contrller ===>', addParam.note)
             /**
              * @param addParam contains note data and userId
              */
@@ -69,8 +70,11 @@ NoteController.prototype.readNoteController = async (req, res) => {
         /**
         * @param param contains query, size of records, noteId, userId, search keyword
         */
+
         let readNoteRes = await noteServObj.readNoteServ(param)
-        return res.status(200) .send(readNoteRes)
+        console.log("note read controller", readNoteRes);
+        return res.status(200).send(readNoteRes)
+
     }
     catch (err) {
         log.logger.error('read Note==>', err)
@@ -268,7 +272,7 @@ NoteController.prototype.deleteNoteController = async (req, res) => {
 NoteController.prototype.readArchiveController = async (req, res) => {
     try {
         let query = pageListObj.pageList(req, res)
-        console.log('Archive read Notes Contrller ===>',query)
+        console.log('Archive read Notes Contrller ===>', query)
         let archiveParam = {
             query: query,
             size: req.query.size,
@@ -292,14 +296,14 @@ NoteController.prototype.readArchiveController = async (req, res) => {
 NoteController.prototype.readTrashController = async (req, res) => {
     try {
         let query = pageListObj.pageList(req, res)
-        console.log('Trash read Notes Contrller ===>',query)
+        console.log('Trash read Notes Contrller ===>', query)
         let trashParam = {
             query: query,
             size: req.query.size,
             userId: req.token.payload.id
         }
         let trashNoteRes = await noteServObj.readTrashServ(trashParam)
-        return res.status( 200 ).send(trashNoteRes)
+        return res.status(200).send(trashNoteRes)
     }
     catch (err) {
         log.logger.error('Trash read Notes==>', err)
@@ -316,14 +320,14 @@ NoteController.prototype.readTrashController = async (req, res) => {
 NoteController.prototype.readRemindController = async (req, res) => {
     try {
         let query = pageListObj.pageList(req, res)
-        console.log('Reminder read Notes Contrller ===>',query)
+        console.log('Reminder read Notes Contrller ===>', query)
         let remindParam = {
             query: query,
             size: req.query.size,
             userId: req.token.payload.id
         }
         let remindNoteRes = await noteServObj.readRemindServ(remindParam)
-        return res.status(200 ).send(remindNoteRes)
+        return res.status(200).send(remindNoteRes)
     }
     catch (err) {
         log.logger.error('Reminder read Notes==>', err)
@@ -340,12 +344,12 @@ NoteController.prototype.readRemindController = async (req, res) => {
  */
 NoteController.prototype.addLabelNoteController = async (req, res) => {
     try {
-        console.log('add Label To Note Controller Contrller ===>',)
+        console.log('add Label To Note Controller Contrller ===>')
         let labelParam = {
-            labelId : req.body.labelId,
+            labelId: req.body.labelId,
             noteId: req.body.noteId
         }
-        console.log('note label===>',labelParam)
+        console.log('note label===>', labelParam)
         let labelNoteRes = await noteServObj.updateLabelServ(labelParam)
         return res.status(labelNoteRes.status ? 200 : 422).send(labelNoteRes)
     }
@@ -363,12 +367,12 @@ NoteController.prototype.addLabelNoteController = async (req, res) => {
  */
 NoteController.prototype.deleteLabelNoteController = async (req, res) => {
     try {
-        console.log('add Label To Note Controller Contrller ===>',)
+        console.log('add Label To Note Controller Contrller ===>')
         let labelParam = {
-            labelId : req.body.labelId,
+            labelId: req.body.labelId,
             noteId: req.body.noteId
         }
-        console.log('delete note label===>',labelParam)
+        console.log('delete note label===>', labelParam)
         let labelNoteRes = await noteServObj.deleteLabelServ(labelParam)
         return res.status(labelNoteRes.status ? 200 : 422).send(labelNoteRes)
     }
@@ -377,16 +381,33 @@ NoteController.prototype.deleteLabelNoteController = async (req, res) => {
         return res.status(400).json({ 'error': err })
     }
 }
-
+/****************************************************************************************************
+ * @param req 
+ * @param res 
+ * @description noteCount controller giving notes count
+ ****************************************************************************************************
+ */
 NoteController.prototype.noteCount = async (req, res) => {
     try {
-        console.log('Note count controller  ===>',)
+        console.log('Note count controller  ===>')
         let noteParam = {
             userId: req.token.payload.id
         }
-        console.log('note count===>',noteParam)
-        let NoteRes = await noteServObj.getCountServ(noteParam)
-        return res.status(NoteRes.status ? 200 : 422).send(NoteRes)
+        console.log('note count===>', noteParam)
+        let notes = await noteServObj.readNoteServ(noteParam)
+        let reminder = await noteServObj.readRemindServ(noteParam)
+        let archive = await noteServObj.readArchiveServ(noteParam)
+        let trash = await noteServObj.readTrashServ(noteParam)
+
+        console.log("count", notes.data.length);
+
+        let notesCount = {
+            noteCount: notes.data.length,
+            reminderCount: reminder.data.length,
+            archiveCount: archive.data.length,
+            trashCount: trash.data.length
+        }
+        return res.status(200).send(notesCount)
     }
     catch (err) {
         log.logger.error('Notes count==>', err)
@@ -394,6 +415,80 @@ NoteController.prototype.noteCount = async (req, res) => {
     }
 }
 
+/****************************************************************************************************
+ * @param req 
+ * @param res 
+ * @description searchController search notes
+ ****************************************************************************************************
+ */
+NoteController.prototype.searchController = async (req, res) => {
+    try {
+        let query = pageListObj.pageList(req, res)
+        console.log('Search note contrller ===>')
+        let param = {
+            query: query,
+            size: req.query.size,
+            userId: req.token.payload.id,
+            searchKey: req.body.searchKey
+        }
+
+        let searchNotes = await noteServObj.searchNotes(param)
+        return res.status(searchNotes.status ? 200 : 422).send(searchNotes)
+    }
+    catch (error) {
+        log.logger.error('')
+    }
+}
+
+/****************************************************************************************************
+ * @param req 
+ * @param res 
+ * @description latestNotes controller get latest 10 notes
+ ****************************************************************************************************
+ */
+NoteController.prototype.latestNotes = async (req, res) => {
+    try {
+        console.log('read Note Contrller ===>')
+        let param = {
+            userId: req.token.payload.id
+        }
+        let redisNotes = await redisObj.getData(client, param)
+            console.log("redis notes only", redisNotes);
+
+        // if (redisNotes) {
+        //     let response = {
+        //         status: true,
+        //         data:  { readData: redisNotes } ,
+        //         message: 'Notes from redis cache'
+
+        //     }
+        //     return res.status(200).send(response)
+        // } else {
+            async.waterfall([
+                async function () {
+                    let latestNotes = await noteServObj.latestNotes(param)
+                    console.log("1 function", latestNotes.data);
+                    return latestNotes
+                },
+                async function (latestNotes) {
+                    console.log("callback notes", latestNotes);
+                    param = {
+                        userId: req.token.payload.id,
+                        notes: latestNotes.data.readData
+                    }
+                    redisObj.setData(client, param)
+                    return latestNotes;
+                }
+            ], function (err, latestNotes) {
+                console.log("response to browser", latestNotes);
+                return res.status(latestNotes.status ? 200 : 422).send(latestNotes)
+            });
+        }
+    // }
+    catch (error) {
+        log.logger.error('latest notes controller', error)
+    }
+}
 /****************************************************************************************************
  * @description NoteController object created and exports to router
  ****************************************************************************************************

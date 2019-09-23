@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { createMuiTheme, MuiThemeProvider, Dialog, DialogContent, InputBase, Divider, Checkbox, FormControlLabel } from '@material-ui/core';
 import { addLabel, updateNoteLabel } from '../services/NoteService';
 
-
 const theme = createMuiTheme({
     overrides: {
         MuiBackdrop: {
@@ -10,7 +9,8 @@ const theme = createMuiTheme({
                 "position": "relative",
                 "touch-action": "none",
                 "background-color": "rgba(0, 0, 0, 0.0)",
-                "-webkit-tap-highlight-color": "transparent"
+                "-webkit-tap-highlight-color": "transparent",
+                "overflow-y": "unset"
             }
         },
         MuiPaper: {
@@ -41,7 +41,7 @@ class LabelComponent extends Component {
             label: '',
             checkedA: false,
             labelArray: props.labels,
-            openLabel:props.openLabel
+            openLabel: props.openLabel
         }
     }
 
@@ -50,70 +50,74 @@ class LabelComponent extends Component {
         this.setState({ label: label });
     }
 
-    handleChangeL = (selectId,selectLabel) => (e) => {
+    handleChangeL = (selectId, selectLabel) => (e) => {
         this.setState({ [selectId]: e.target.checked })
-        if(!this.props.noteType && e.target.checked){
-            this.props.addLabel(selectId,selectLabel)
+        if (this.props.NoteType && e.target.checked) {
+
+            this.props.addLabel(selectId, selectLabel)
         }
-        else if(!this.props.noteType && !e.target.checked){
-            this.props.deleteLabel(selectId,selectLabel)
+        else if (this.props.NoteType && !e.target.checked) {
+            this.props.deleteLabel(selectId, selectLabel)
         }
-        else{
-        let data = {
-            noteId:this.props.noteId,
-            labelId:selectId
+        else {
+            let data = {
+                noteId: this.props.noteId,
+                labelId: selectId
+            }
+            let noteLabel = updateNoteLabel(data);
+            console.log("===================================>>>>>>> ", noteLabel);
+
+            this.props.getNotes()
         }
-       let noteLabel = updateNoteLabel(data);
-       console.log('add label on note  ',noteLabel);
-       this.props.getNotes()}
     }
 
-    handleLabel =()=> {
+    handleLabel = () => {
         console.log('label  ===>', this.state.label);
         let labelData = {
             label: this.state.label
         }
-        let response = addLabel(labelData);
-        console.log('response add label  ,', response);
-        this.setState({ label: '' })
-        this.props.getNotes()
+        addLabel(labelData)
+            .then((addLabelRes) => {
+                console.log('add label', addLabelRes)
+                this.props.getLabels()
+                console.log('response add label  ,', addLabelRes);
+                this.setState({ label: '' })
+            })
+            .catch((error) => {
+                console.log(error);
+
+            })
+
     }
 
-    handleLabelClose =() =>{
-        this.setState({openLabel:false})
-        this.props.getNotes()
-        
-    }
-    
     render() {
         if (this.state.labelArray) {
-        console.log(this.state.labelArray, "LABEL DATA  in label===================>")
-        var labels = this.state.labelArray.map((key, index) => {
-            if(!key.isDeleted){
-            return ( <FormControlLabel
-                key={index}
-
-                control={
-                  <Checkbox
-                    checked={this.state.labelArray._id}
-                    onChange={this.handleChangeL(key._id,key.label)}
-                    value=""
-                  />
+            var labels = this.state.labelArray.map((key, index) => {
+                if (!key.isDeleted) {
+                    return (<FormControlLabel
+                        key={index}
+                        control={
+                            <Checkbox
+                                checked={this.state.labelArray._id}
+                                onChange={this.handleChangeL(key._id, key.label)}
+                                value=""
+                            />
+                        }
+                        label={key.label}
+                    />
+                    )
                 }
-                label={key.label}
-              />
-              )}
-              else 
-                return null
-        })
-          }
-          
+                else
+                    return null
+            })
+        }
+
         return (
             <div className="label-div">
                 <MuiThemeProvider theme={theme}>
                     <Dialog
                         open={this.state.openLabel}
-                        onClose={this.handleLabelClose}
+                        onClose={this.props.handleLabelClose}
                         aria-labelledby="form-dialog-title"
                     >
                         <DialogContent>Add label</DialogContent>
@@ -128,7 +132,7 @@ class LabelComponent extends Component {
                             style={{ color: "#434343", fontSize: "15px", padding: "5px" }}
                         ></InputBase>
                         <div className="labels-div">
-                        {labels}
+                            {labels}
                         </div>
                         <Divider />
                         <button className="create-button" onClick={this.handleLabel}>+ Create</button>

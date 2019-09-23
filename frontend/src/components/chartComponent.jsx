@@ -31,12 +31,12 @@ class chartComponent extends Component {
     handleChart = () => {
         getNoteCount()
         .then((response)=>{
-            console.log("count",response.data.data.totalPages.noteCount);
+            console.log("count",response.data);
             let data= [
-                { noteType: 'Notes', area:  response.data.data.totalPages.noteCount},
-                { noteType: 'Reminder', area: response.data.data.totalPages.reminderCount },
-                { noteType: 'Archive', area: response.data.data.totalPages.archiveCount },
-                { noteType: 'Bin', area:  response.data.data.totalPages.trashCount }
+                { noteType: 'Notes', area:  response.data.noteCount},
+                { noteType: 'Reminder', area: response.data.reminderCount },
+                { noteType: 'Archive', area: response.data.archiveCount },
+                { noteType: 'Bin', area:  response.data.trashCount }
             ]
             this.setState({data : data })
         }).catch((error)=>{

@@ -8,8 +8,6 @@ import {
   swap
 } from "react-grid-dnd";
 
-
-
 class DisplayGrid extends React.Component {
   constructor(props) {
     super(props)
@@ -45,7 +43,7 @@ class DisplayGrid extends React.Component {
         viewCss={this.props.viewCss}
         labelData={this.props.labelData}
         Display={this.props.Display}
-        handleGetLabel={this.props.handleGetLabel}
+        getLabels={this.props.getLabels}
         getNotes = {this.props.getNotes}
         noteData={key}  key={index}/>
         // </GridItem >

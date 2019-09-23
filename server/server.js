@@ -23,6 +23,8 @@ const swaggerDocument = require('../server/Swagger/swagger.json')
 var app = express();
 const mongoose = require('./app/mongoose/mongoose.connect')
 const cors = require('cors')
+var schedule = require('node-schedule');
+const notify = require('./worker')
  redis = require('redis')
 require('dotenv').config()
 
@@ -53,6 +55,13 @@ client.on("error", function (err) {
  */
 client.on("connect", function (res) {
     console.log("Connection established with redis");
+});
+
+/**
+ * @description Scheduler for notification service
+ */
+var j = schedule.scheduleJob('0 58 19 * * ?', ()=>{
+  notify();
 });
 
 /**

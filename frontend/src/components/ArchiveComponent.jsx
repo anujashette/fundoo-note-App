@@ -31,11 +31,11 @@ class ArchiveComponent extends Component {
             <div>
                 {!this.state.archive ?
                     <Tooltip title="Archive">
-                        <IconButton onClick={this.handleArchive}><Archive style={{ width: "17px" }} /></IconButton>
+                        <IconButton onClick={this.handleArchive}><Archive style={{  height: "15px",width:" 15px"}}/></IconButton>
                     </Tooltip>
                     :
                     <Tooltip title="Unarchive">
-                        <IconButton onClick={this.handleArchive}><Unarchive style={{ width: "17px" }} /></IconButton>
+                        <IconButton onClick={this.handleArchive}><Unarchive style={{  height: "15px",width:" 15px"}}/></IconButton>
                     </Tooltip>
                 }
 

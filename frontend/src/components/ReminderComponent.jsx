@@ -38,44 +38,47 @@ class ReminderComponent extends Component {
 
     handleClose = () => {
         this.setState({ anchorEl: false })
-
     }
 
     handleToday = async () => {
         const today = new Date()
-        today.setHours(12, 44, 0)
-        let date = { reminder: today, noteId: this.props.id }
-        let response = await updateReminder(date)
-        console.log("reminder response   ", response);
-        this.setState({ anchorEl: false })
-        this.props.getNotes()
+        today.setHours(1, 22, 0)
+        if(this.props.reminderType){
+            this.props.createReminder(today)
+        }else if(!this.props.reminderType){
+            let date = { reminder: today, noteId: this.props.id }
+            let response = await updateReminder(date)
+            console.log("reminder response   ", response);
+            this.setState({ anchorEl: false })
+            this.props.getNotes()
+        }
         askForPermissioToReceiveNotifications()
     }
 
     handleTomorrow = () => {
-        const tomorrow = new Date()
-        tomorrow.setDate(tomorrow.getDate() + 1)
-        tomorrow.setHours(8, 0, 0)
-        let date = { reminder: tomorrow, noteId: this.props.id }
-        let response = updateReminder(date)
-        console.log("reminder response   ", response);
-        this.setState({ anchorEl: false })
-        this.props.getNotes()
-        askForPermissioToReceiveNotifications()
+        // const tomorrow = new Date()
+        // tomorrow.setDate(tomorrow.getDate() + 1)
+        // tomorrow.setHours(8, 0, 0)
+        // let date = { reminder: tomorrow, noteId: this.props.id }
+        // let response = updateReminder(date)
+        // console.log("reminder response   ", response);
+        // this.setState({ anchorEl: false })
+        // this.props.getNotes()
+        // askForPermissioToReceiveNotifications()
     }
 
     handleWeek = () => {
-        const nextWeek = new Date()
-        // nextWeek.setDate(nextWeek.getDate() + (1 + 7 - nextWeek.getDay()) % 7);
-        nextWeek.setDate(nextWeek.getDate() + (7 - nextWeek.getDay()) % 7 + 1);
-        nextWeek.setHours(8, 0, 0)
-        console.log("next week date", nextWeek);
-        let date = { reminder: nextWeek, noteId: this.props.id }
-        let response = updateReminder(date)
-        console.log("reminder response   ", response);
-        this.setState({ anchorEl: false })
-        this.props.getNotes()
-        askForPermissioToReceiveNotifications()
+        // const nextWeek = new Date()
+        // // nextWeek.setDate(nextWeek.getDate() + (1 + 7 - nextWeek.getDay()) % 7);
+        // nextWeek.setDate(nextWeek.getDate() + (7 - nextWeek.getDay()) % 7 + 1);
+        // nextWeek.setHours(8, 0, 0)
+        // console.log("next week date", nextWeek);
+        // let date = { reminder: nextWeek, noteId: this.props.id }
+        // let response = updateReminder(date)
+        // console.log("reminder response   ", response);
+        // this.setState({ anchorEl: false })
+        // this.props.getNotes()
+        // askForPermissioToReceiveNotifications()
     }
 
     render() {
@@ -87,7 +90,7 @@ class ReminderComponent extends Component {
                         aria-owns={this.state.anchorEl ? 'remind-menu' : undefined}
                         aria-haspopup="true"
                         onClick={this.handleMore}
-                    ><ReminderIcon style={{ width: "17px" }} /></IconButton>
+                    ><ReminderIcon style={{  height: "15px",width:" 15px"}}/></IconButton>
                 </Tooltip>
                 <MuiThemeProvider theme={theme}>
                     <Menu
@@ -102,7 +105,7 @@ class ReminderComponent extends Component {
                         <Divider style={{ marginTop: "10px" }} />
                         <MenuItem value="" onClick={this.handleToday}>Today <span style={{ marginLeft: "7.2rem" }}>20:00</span></MenuItem>
                         <MenuItem value="" onClick={this.handleTomorrow}>Tomorrow<span style={{ marginLeft: "5.50rem" }}>8:00</span></MenuItem>
-                        <MenuItem value="" onClick={this.handleWeek}>Next week<span style={{ marginLeft: "5.2rem" }}>8:00</span></MenuItem>
+                        <MenuItem value="" onClick={this.handleWeek}>Monday<span style={{ marginLeft: "6.3rem" }}>8:00</span></MenuItem>
                     </Menu>
                 </MuiThemeProvider>
             </div>

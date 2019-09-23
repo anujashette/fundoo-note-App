@@ -17,7 +17,7 @@ function auth() { }
  *  @param email
  */
 
-auth.prototype.mailer = (url, email) => 
+auth.prototype.mailer = (email , mailContents) => 
 {
     const transporter = nodemailer.createTransport
         ({
@@ -33,8 +33,8 @@ auth.prototype.mailer = (url, email) =>
     {
         from: process.env.id,       // sender address
         to: email,                  // list of receivers
-        subject: 'Fundoo Notes Verify Email...!', // Subject line
-        html: `To verify your account click on this link\n\n'<a href="${url}">${url}</a>"`// plain text body
+        subject:mailContents.subject , // Subject line
+        html:mailContents.html // plain text body
     };
 
     transporter.sendMail(mailOptions, function (err, info) 

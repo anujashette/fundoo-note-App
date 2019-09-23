@@ -1,39 +1,55 @@
 
 #Display-note-card {
   border-style: solid;
-  margin-top: 8%;
-  margin-bottom: 10%;
-  width: 205px;
-  // width: 100%;
+  margin-top: 10%;
+  width: 220px;
   margin-left: 25px;
   border-color: #ffffff;
-  border-radius: 5px;
+  border-radius: 13px;
   min-height: 111px;
   text-align: left;
   border-width: 1px;
   word-wrap: break-word;
   box-shadow:#555555;
-  box-shadow: 0 0 1px black;
+  box-shadow: 0 0 3px rgb(121, 119, 119);
 }
 
 #Display-note-card-list {
   border-style: solid;
   margin-top: 5%;
   width: 100%;
-  border-color: #9e9d9d;
-  border-radius: 5px;
+  border-color: #ffffff;
+  border-radius: 13px;
   min-height: 111px;
   text-align: left;
   border-width: 1px;
   word-wrap: break-word;
   box-shadow:#555555;
-  box-shadow: 0 0 1px black;
+  box-shadow:0 0 3px rgb(121, 119, 119);
+}
+.note{
+  
 }
 
-.Icon-div{
+.icon-div{
+  // opacity: 1;
+  opacity: 0;
+}
+.note:hover .icon-div{
+  opacity: 1;
+}
+
+.icon-all-span{
+  display:flex;
+
+}
+.span-icon{
   display: flex;
 }
 
+.Icon-div-edit{
+  display: flex;
+}
 .grid-div-large{
   // display: flex;
   // justify-content: center;
@@ -62,22 +78,26 @@
 .mainnotes-grid{
   display: flex;
   flex-wrap: wrap;
-  width: 57%;
+  width: 58%;
   justify-content: flex-start;
 }
 
 .allnotes-div{
   display: flex;
   justify-content: center;
+  margin-bottom: 25px;
 }
 
 .note-text-div{
-  padding: 10px;
-  text-decoration-color: #9e9d9d;
+  padding: 5px;
+  // text-decoration-color: #9e9d9d;
 }
-
+.title-div{
+  padding: 5px;
+}
 .desc-div{
   min-height: 19px;
+  padding: 5px
 }
 
 .MoreMenu{
@@ -96,18 +116,16 @@
 }
 
 .label-div{
-  left:50%
+  left:10%;
+  margin-bottom: 2px;
 }
 
 .labels-div{
   display: flex;
   flex-direction: column;
   margin-left: 10px;
-  overflow: scroll;
-  min-height: 200px;
-  // position: fixed;
-  // flex-wrap: wrap;
-
+  overflow-y: scroll;
+  min-height: 70px;
 }
 
 .create-button{
@@ -135,7 +153,7 @@
     font-size: 13px;
     width: 60px;
     height: 25px;
-    margin: 10px 20px 0px 270px;
+    margin: 10px 30px 0px 270px;
     display: inline-block;
     cursor: pointer;
     outline: deepskyblue;
@@ -161,15 +179,14 @@
 }
 
 .edit-label-2{
+  display: flex;
+  justify-content: flex-end;
   height: 50px;
 }
 
-.labels-div{
+.labels-edit-div{
   display: flex;
-    // flex-direction: row;
-    // margin-left: 10px;
-    // min-height: 200px;
-    overflow: unset
+  overflow-y: unset
 }
 
 .chart-div{
@@ -178,7 +195,6 @@
   margin-left: 25px;
   margin-right: 40px;
   margin-top: 34%;
-
 }
 
 .chart-avatar{
@@ -186,4 +202,8 @@
   width: "15px";
    height: "15px"; 
    margin-bottom: "300%";
+}
+
+.label-div-create{
+  display: flex;
 }

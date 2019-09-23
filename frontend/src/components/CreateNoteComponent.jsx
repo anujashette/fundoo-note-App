@@ -10,6 +10,8 @@ import ColorComponent from './ColorComponent';
 import ArchiveComponent from './ArchiveComponent';
 import MoreComponent from './MoreComponent';
 import Archive from '@material-ui/icons/ArchiveOutlined';
+import Cancel from '@material-ui/icons/Close'
+import Reminder from '@material-ui/icons/WatchLaterOutlined'
 
 class CreateNoteComponent extends Component {
 
@@ -19,17 +21,22 @@ class CreateNoteComponent extends Component {
             data: {
                 title: '',
                 description: '',
-                reminder:'',
+                reminder: [],
                 notecolor: '',
                 archive: false,
                 trash: false,
-                notelabel:[]
+                notelabel: []
             },
             open: false,
             snackbaropen: false,
             snackbarmsg: '',
             NoteType: true,
-            labelArray:[]
+            reminderType:true,
+            labelArray: [],
+            labelArray2:[],
+            reminderArray:[],
+            
+
         }
         this.handleClose = this.handleClose.bind(this)
     }
@@ -48,7 +55,6 @@ class CreateNoteComponent extends Component {
             this.handleClear()
         }
         this.setState({ open: false })
-
     }
 
     handleChange = (e) => {
@@ -63,10 +69,10 @@ class CreateNoteComponent extends Component {
         data['description'] = '';
         data['notecolor'] = '';
         data['notelabel'] = []
-        this.setState({ data ,labelArray:[]})
+        this.setState({ data, labelArray: [] })
     }
 
-   async handleClose(e) {
+    async handleClose(e) {
         e.preventDefault();
         this.setState({ open: false })
 
@@ -74,21 +80,22 @@ class CreateNoteComponent extends Component {
             let noteInput = {
                 title: this.state.data.title,
                 description: this.state.data.description,
-                reminder : this.state.data.reminder,
+                reminder: this.state.data.reminder,
                 archive: this.state.data.archive,
                 notecolor: this.state.data.notecolor,
-                notelabel:this.state.data.notelabel
+                notelabel: this.state.data.notelabel
             }
-           await createNote(noteInput)
+            await createNote(noteInput)
                 .then((response) => {
                     this.props.handleGetNotes()
                     console.log('Creare note response', response)
-                    this.handleClear()
                 })
                 .catch((error) => {
                     console.log('Creare note response', error)
                 })
         }
+        this.handleClear()
+
     }
 
     handleArchive = () => {
@@ -99,33 +106,58 @@ class CreateNoteComponent extends Component {
     }
 
     selectColor = (selectedColor) => {
-        this.setState({open:true})
+        this.setState({ open: true })
         const data = this.state
         data['notecolor'] = selectedColor
         this.setState({ data })
         console.log('color applied', selectedColor);
     }
 
-    addLabel = (labelId,labels) => {
-        const labelArray=this.state.labelArray.concat(labels)
-        const {data} = this.state
-        data['notelabel']=data.notelabel.concat(labelId)
-        this.setState({data,labelArray})
-        console.log("selected labels //////////////////////////&***********************",this.state.data.notelabel);
-
-    }
-
-    deleteLabel=(labelId,labels)=>{
-        console.log("selected labelIDddddddd //////////////////////////&***********************",labels);
-        const labelArray=this.state.labelArray.splice(labels,1)
-        const {data} = this.state
-        data['notelabel']=data.notelabel.splice(labelId,1)
-        console.log("selected labels //////////////////////////&***********************",this.state.notelabel);
-        this.setState({data,labelArray})
-    }
-
-    dummyFunction = () =>{
+    addLabel = (labelId, labels) => {
+        const labelArray = this.state.labelArray.concat(labels)
+        console.log("label array in create",labelArray);
         
+        const { data } = this.state
+        data['notelabel'] = data.notelabel.concat(labelId)
+        this.setState({ data, labelArray })
+        console.log("selected labels add//////////////////////////&***********************", this.state.data.notelabel);
+    }
+
+    deleteLabel = (labelId, labels) => {
+       let index = this.state.labelArray.indexOf(labels)
+        const labelArray = this.state.labelArray.splice(index, 0)
+        index = this.state.labelArray.indexOf(labelId)
+        const { data } = this.state
+        data['notelabel'] = data.notelabel.splice(index, 0)
+    // let labelArray2 = [];
+    //     for(let i=0; i<this.state.labelArray.length; i++){
+    //         if(this.state.labelArray[i] === labels){
+    //             continue;
+    //         }
+    //         labelArray2 = this.state.labelArray2.concat(this.state.labelArray[i]) 
+            
+    //         console.log("labels",labelArray2);            
+
+    //     }
+
+    //     // console.log("label delete array",this.state.labelArray);
+
+    //     console.log("label delete array",labelArray2);
+
+        this.setState({ data, labelArray })
+    }
+
+    dummyFunction = () => {
+
+    }
+
+    createReminder = (reminderDate) =>{
+        const reminderArray = this.state.reminderArray.concat(reminderDate)
+        const {data} = this.state
+        // data['reminder'] = data.reminder.concat(reminderDate)
+        this.setState({reminderArray})
+        console.log("reminderArray date",this.state.reminderArray);    
+        // console.log("this state in create",this.state.data.reminder);    
     }
 
     render() {
@@ -141,6 +173,28 @@ class CreateNoteComponent extends Component {
                 />
             )
         })
+        // const displayReminder = this.state.reminderArray.map((key, index) => {
+        //     console.log("reminders in display",this.props.noteData.reminder);
+            
+        //     // if(this.props.noteData.reminder.length > 0 && this.props.noteData.reminder[0] !== null){
+        //     //     let date = this.props.noteData.reminder
+        //     //     date =  Date.parse(date)
+        //     //     date = new Date(date)                
+        //     return (
+        //         <Chip
+        //             icon={<Reminder style={{width:"18px",height:"18px"}}/>}
+        //             key={index}
+        //             label={key}
+        //             // onDelete={this.deleteReminder(key)}
+        //             deleteIcon={<Cancel style={{width:"18px",height:"18px"}}/>}
+        //             style={{
+        //                 height: "23px", minWidth: "100px"
+        //             }}
+        //         />
+        //     )}
+        // // }
+        // )
+
         return (
             <div>
                 <Snackbar
@@ -163,7 +217,6 @@ class CreateNoteComponent extends Component {
                                         className="Take-a-note"
                                         value={this.state.data.title}
                                         name="title"
-                                    // onChange={e => this.handleChange(e)} 
                                     > </InputBase>
                                     <EditOutline />
                                 </div>
@@ -197,32 +250,53 @@ class CreateNoteComponent extends Component {
                                         style={{ color: "#434343", fontSize: "15px" }}
                                     >
                                     </InputBase>
-
-                                        <div className="label-div" >
+                                   
+                                    <div className="label-div-create">
+                                    {this.state.labelArray ?
+                                        <div  >
                                             {displayLabel}
                                         </div>
+                                        :
+                                        null
+                                    }
 
-                                    <div className="Icon-div">
-                                        <ReminderComponent />
-                                        <ColorComponent selectColor={this.selectColor} createNote={this.state.NoteType} />
-                                        
-                                        <Tooltip title="Archive">
-                                            <IconButton onClick={this.handleArchive}><Archive style={{ width: "17px" }} /></IconButton>
-                                        </Tooltip>
-                                        <MoreComponent
-                                            noteState={this.state}
-                                            getNotes={this.dummyFunction}
-                                            labels={this.props.labelData}
-                                            NoteType={this.state.NoteType}
-                                            addLabel={this.addLabel}
-                                            deleteLabel={this.deleteLabel}
-                                        />
-                                        <button className="close-button" onClick={this.handleClose} style={{ background: this.state.notecolor }}>Close</button>
+                                    {/* {this.state.reminderArray ?
+                                        <div >
+                                            {displayReminder}
+                                        </div>
+                                    :
+                                        null
+                                    } */}
+                                    
                                     </div>
+                                    <div className="Icon-div-edit">
+                                    <ReminderComponent
+                                    reminderType={this.state.reminderType}
+                                    createReminder={this.createReminder}
+                                    />
+                                    <ColorComponent 
+                                    selectColor={this.selectColor} 
+                                    createNote={this.state.NoteType} />
+
+                                    <Tooltip title="Archive">
+                                        <IconButton onClick={this.handleArchive}><Archive style={{ width: "20px", height: "15px" }} /></IconButton>
+                                    </Tooltip>
+                                    <MoreComponent
+                                        noteState={this.state}
+                                        getNotes={this.dummyFunction}
+                                        labels={this.props.labelData}
+                                        NoteType={this.state.NoteType}
+                                        addLabel={this.addLabel}
+                                        deleteLabel={this.deleteLabel}
+                                        getLabels={this.props.getLabels}
+                                    />
+
+                                    <button className="close-button" onClick={this.handleClose} style={{ background: this.state.notecolor }}>Close</button>
+                                </div>
                                 </div>
                             </CardContent>
                         </Card>
-                    }
+                }
                     {/* </ClickAwayListener> */}
                 </div>
             </div>

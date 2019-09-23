@@ -50,7 +50,7 @@ exports.register = (async function (req, res) {
     else {
         try {
             let registerRes = await serviceObj.register(req.body)
-            log.logger.info('register controller', registerRes)
+            log.logger.info('register controller ', registerRes)
             return res.status(registerRes.status ? 200 : 422).send(registerRes)
         }
         catch (err) {

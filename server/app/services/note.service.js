@@ -18,11 +18,11 @@ function NoteService() { }
  * back to addNoteController
  ****************************************************************************************************
  */
-NoteService.prototype.addNoteServ = async (addField) => {
+NoteService.prototype.addNoteServ = (addField) => {
     console.log('Note Service ===>', addField)
 
     let CreatResponse = {}
-    let createdNote = await noteModelObj.createNote(addField.note, addField.userId)
+    let createdNote = noteModelObj.create(addField.note, addField.userId)
 
     if (createdNote.error) {
         CreatResponse.status = false
@@ -47,8 +47,8 @@ NoteService.prototype.readNoteServ = async (param) => {
     console.log('Read Note Service ===>', param)
 
     let readResponse = {}
-    param.field = { 'trash': false, 'archive': false }
-
+    let readParam = {}
+    readParam.query = { $and: [{ "userId": param.userId }, { 'trash': false, 'archive': false }] }, {}, param.query
     // await getData.getCacheData('readAllBy' + JSON.stringify(param.field))
     //     .then((reply) => {
     //         console.log('reply--->', reply);
@@ -59,16 +59,16 @@ NoteService.prototype.readNoteServ = async (param) => {
     //     })
 
     // if (!readResponse.data) {
-        let getNote = await noteModelObj.readNote(param)
-        console.log('data read ===>', getNote)
+    let getNote = await noteModelObj.read(readParam)
+    console.log('data read ===>', getNote)
 
-        if (getNote.error) {
-            readResponse.status = false
-            readResponse.error = getNote.error
-            return readResponse
-        }
-        readResponse.data = getNote.readData
-        readResponse.totalpages = getNote.totalPages
+    if (getNote.error) {
+        readResponse.status = false
+        readResponse.error = getNote.error
+        return readResponse
+    }
+    readResponse.data = getNote.readData
+    readResponse.totalpages = getNote.totalPages
     // }
     readResponse.status = true
     readResponse.message = 'Note read successfully'
@@ -82,12 +82,12 @@ NoteService.prototype.readNoteServ = async (param) => {
  * and send back to updateTitleController
  ****************************************************************************************************
  */
-NoteService.prototype.updateTitleServ = async (updateTitle) => {
+NoteService.prototype.updateTitleServ = (updateTitle) => {
     console.log('Update Title Service ===>', updateTitle)
 
     let field = { title: updateTitle.title }
     let updateTitleRes = {}
-    let updatedTitle = await noteModelObj.updateNote(field, updateTitle.noteId)
+    let updatedTitle = noteModelObj.update(field, updateTitle.noteId)
 
     if (updatedTitle.error) {
         updateTitleRes.status = false
@@ -108,12 +108,12 @@ NoteService.prototype.updateTitleServ = async (updateTitle) => {
  * and send back to updateDescController
  ****************************************************************************************************
  */
-NoteService.prototype.updateDescServ = async (updateDesc) => {
+NoteService.prototype.updateDescServ = (updateDesc) => {
     console.log('Update description Service ===>', updateDesc)
 
     let field = { description: updateDesc.description }
     let updateDescRes = {}
-    let updatedDesc = await noteModelObj.updateNote(field, updateDesc.noteId)
+    let updatedDesc = noteModelObj.update(field, updateDesc.noteId)
 
     if (updatedDesc.error) {
         updateDescRes.status = false
@@ -134,12 +134,12 @@ NoteService.prototype.updateDescServ = async (updateDesc) => {
  * and send back to updateColorController
  ****************************************************************************************************
  */
-NoteService.prototype.updateColorServ = async (updateColor) => {
+NoteService.prototype.updateColorServ = (updateColor) => {
     console.log('Update color Service ===>', updateColor)
 
     let field = { notecolor: updateColor.notecolor }
     let updateColorRes = {}
-    let updatedColor = await noteModelObj.updateNote(field, updateColor.noteId)
+    let updatedColor = noteModelObj.update(field, updateColor.noteId)
 
     if (updatedColor.error) {
         updateColorRes.status = false
@@ -160,12 +160,12 @@ NoteService.prototype.updateColorServ = async (updateColor) => {
  * and send back to updateRemindController
  ****************************************************************************************************
  */
-NoteService.prototype.updateRemindServ = async (updateRemind) => {
+NoteService.prototype.updateRemindServ = (updateRemind) => {
     console.log('Update remind Service ===>', updateRemind)
 
     let field = { reminder: [updateRemind.reminder] }
     let updateRemindRes = {}
-    let updatedRemind = await noteModelObj.updateNote(field, updateRemind.noteId)
+    let updatedRemind = noteModelObj.update(field, updateRemind.noteId)
 
     if (updatedRemind.error) {
         updateRemindRes.status = false
@@ -186,12 +186,12 @@ NoteService.prototype.updateRemindServ = async (updateRemind) => {
  * to deleteRemindController
  ****************************************************************************************************
  */
-NoteService.prototype.deleteRemindServ = async (deleteRemind) => {
+NoteService.prototype.deleteRemindServ = (deleteRemind) => {
     console.log('Delete remind Service ===>', deleteRemind)
 
     let field = { reminder: [] }
     let deleteRemindRes = {}
-    let deletedRemind = await noteModelObj.updateNote(field, deleteRemind.noteId)
+    let deletedRemind = noteModelObj.update(field, deleteRemind.noteId)
 
     if (deletedRemind.error) {
         deleteRemindRes.status = false
@@ -214,13 +214,15 @@ NoteService.prototype.deleteRemindServ = async (deleteRemind) => {
  */
 NoteService.prototype.updateArchiveServ = async (updateArchive) => {
     console.log('Update Archive Service ===>', updateArchive)
+    let param = {}
+    param.query = { '_id': updateArchive.noteId }
     let updateArchiveRes = {}
     let updatedArchive = ''
-    let status = await noteModelObj.readNote(updateArchive)
+    let status = await noteModelObj.read(param)
 
     if (!status.error && status.readData[0].trash == false) {
         let field = { archive: !status.readData[0].archive }
-        updatedArchive = await noteModelObj.updateNote(field, updateArchive.noteId)
+        updatedArchive = await noteModelObj.update(field, updateArchive.noteId)
     }
     else if (status.readData[0].trash == true) {
         updateArchiveRes.status = false
@@ -248,13 +250,15 @@ NoteService.prototype.updateArchiveServ = async (updateArchive) => {
  */
 NoteService.prototype.updateTrashServ = async (updateTrash) => {
     console.log('Update Trash Service ===>', updateTrash)
+    let param = {}
+    param.query = { '_id': updateTrash.noteId }
     let updateTrashRes = {}
     let updatedTrash = ''
-    let status = await noteModelObj.readNote(updateTrash)
+    let status = await noteModelObj.read(param)
 
-    if (!status.error ) {
+    if (!status.error) {
         let field = { trash: !status.readData[0].trash }
-        updatedTrash = await noteModelObj.updateNote(field, updateTrash.noteId)
+        updatedTrash = noteModelObj.update(field, updateTrash.noteId)
     }
     else if (status.readData[0].archive == true) {
         updateTrashRes.status = false
@@ -282,11 +286,13 @@ NoteService.prototype.updateTrashServ = async (updateTrash) => {
  */
 NoteService.prototype.deleteNoteServ = async (deleteNote) => {
     console.log('Delete Note Service ===>', deleteNote)
-    let status = await noteModelObj.readNote(deleteNote)
+    let param = {}
+    param.query = { '_id': deleteNote.noteId }
+    let status = await noteModelObj.read(param)
     let deletedNote = ''
     let deleteResponde = {}
     if (!status.error && status.readData[0].trash == true)
-        deletedNote = await noteModelObj.deleteNote(deleteNote.noteId)
+        deletedNote = noteModelObj.delete(deleteNote.noteId)
 
     else if (status.readData[0].trash == false) {
         deleteResponde.status = false
@@ -316,8 +322,9 @@ NoteService.prototype.readArchiveServ = async (readParam) => {
     console.log('Read archive notes Service ===>', readParam.userId)
 
     let readArchiveRes = {}
-    readParam.field = { 'archive': true , 'trash':false}
-    let getArchiveNotes = await noteModelObj.readNote(readParam)
+    let param = {}
+    param.query = { $and: [{ "userId": readParam.userId }, { 'archive': true, 'trash': false }] }, {}, readParam.query
+    let getArchiveNotes = await noteModelObj.read(param)
 
     if (getArchiveNotes.error) {
         readArchiveRes.status = false
@@ -342,8 +349,11 @@ NoteService.prototype.readTrashServ = async (readParam) => {
     console.log('Read trash notes Service ===>', readParam.userId)
 
     let readTrashRes = {}
-    readParam.field = { 'trash': true }
-    let getTrashNotes = await noteModelObj.readNote(readParam)
+    let param = {}
+    param.query = { $and: [{ "userId": readParam.userId }, { 'trash': true }] }, {}, readParam.query
+
+    // readParam = { 'trash': true }
+    let getTrashNotes = await noteModelObj.read(param)
 
     if (getTrashNotes.error) {
         readTrashRes.status = false
@@ -368,8 +378,10 @@ NoteService.prototype.readRemindServ = async (readParam) => {
     console.log('Read reminder notes Service ===>', readParam.userId)
 
     let readRemindRes = {}
-    readParam.field = { "reminder": { $ne: [] } }
-    let getRemindNotes = await noteModelObj.readNote(readParam)
+    let param = {}
+    param.query = { $and: [{ "userId": readParam.userId }, { "reminder": { $ne: [] } }] }, {}, readParam.query
+
+    let getRemindNotes = await noteModelObj.read(param)
 
     if (getRemindNotes.error) {
         readRemindRes.status = false
@@ -391,12 +403,12 @@ NoteService.prototype.readRemindServ = async (readParam) => {
  * and send back to addLabelToNoteController
  ****************************************************************************************************
  */
-NoteService.prototype.updateLabelServ = async (updateLabel) => {
+NoteService.prototype.updateLabelServ = (updateLabel) => {
     console.log('Update label Service ===>', updateLabel)
 
     let field = { $addToSet: { notelabel: updateLabel.labelId } }
     let updateLabelRes = {}
-    let updatedLabel = await noteModelObj.updateNote(field, updateLabel.noteId)
+    let updatedLabel = noteModelObj.update(field, updateLabel.noteId)
 
     if (updatedLabel.error) {
         updateLabelRes.status = false
@@ -417,12 +429,12 @@ NoteService.prototype.updateLabelServ = async (updateLabel) => {
  * and send back to deleteLabelNoteController
  ****************************************************************************************************
  */
-NoteService.prototype.deleteLabelServ = async (deleteLabel) => {
+NoteService.prototype.deleteLabelServ = (deleteLabel) => {
     console.log('Delete label Service ===>', deleteLabel)
 
     let field = { $pull: { notelabel: deleteLabel.labelId } }
     let deleteLabelRes = {}
-    let deletedLabel = await noteModelObj.updateNote(field, deleteLabel.noteId)
+    let deletedLabel = noteModelObj.update(field, deleteLabel.noteId)
 
     if (deletedLabel.error) {
         deleteLabelRes.status = false
@@ -437,24 +449,58 @@ NoteService.prototype.deleteLabelServ = async (deleteLabel) => {
     return deleteLabelRes
 }
 
-NoteService.prototype.getCountServ = async (getField) => {
-    console.log('Note count Service ===>', getField)
+NoteService.prototype.latestNotes = async (param) => {
+    console.log('Note count Service ===>', param)
 
-    let CountResponse = {}
-    getField.count = true
-    let countNote = await noteModelObj.readNote( getField , getField.count)
+    let response = {}
+    let latestParam = {}
+    latestParam.query = {$and:[{'userId':param.userId},{ 'trash': false, 'archive': false }] }
+    latestParam.latest = true
+    let latestNotes = await noteModelObj.read(latestParam)
 
-    if (countNote.error) {
-        CountResponse.status = false
-        CountResponse.error = countNote.error
-        return CountResponse
+    if (latestNotes.error) {
+        response.status = false
+        response.error = latestNotes.error
+        return response
     }
 
-    CountResponse.status = true
-    CountResponse.message = 'Notes calculated successfully'
-    CountResponse.data = countNote
+    response.status = true
+    response.message = 'latest notes retrived'
+    response.data = latestNotes
 
-    return CountResponse
+    return response
+}
+
+NoteService.prototype.searchNotes = async (searchParam) => {
+    let searchResponse = {}
+    let param = {}
+    param.query = {
+        $and: [{ "userId": searchParam.userId },
+        {
+            $or:
+                [
+                    { 'title': { $regex: searchParam.searchKey, $options: 'i' } },
+                    { 'description': { $regex: searchParam.searchKey, $options: 'i' } },
+                    { 'notecolor': { $regex: searchParam.searchKey, $options: 'i' } },
+                    { 'reminder': { $regex: searchParam.searchKey, $options: 'i' } },
+                ]
+        },
+        { 'trash': false }
+        ]
+    }
+
+    let searchNotes = await noteModelObj.read(param)
+    if (searchNotes.error) {
+        searchResponse.status = false
+        searchResponse.error = searchNotes.error
+        return searchResponse
+    }
+    searchResponse.data = searchNotes.readData
+    searchResponse.totalpages = searchNotes.totalPages
+    searchResponse.status = true
+    searchResponse.message = 'Note search successfully'
+
+    return searchResponse
 }
 /****************************************************************************************************
  * @description NoteService object created and exports to controller

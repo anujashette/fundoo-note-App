@@ -17,16 +17,16 @@ let modelObj = new Model()                   //  Model object is created
  * @description Registration services take data from controller and pass to model
  *              Received result send to registration controller again
  */
-exports.register = (async function (data) {
+exports.register = ( function (data) {
     log.logger.info('data in service ', data);
-    try {
-        let result = await modelObj.register(data)
+    // try {
+        let result = modelObj.create(data)
         log.logger.info('service register', result)
         return result;
-    }
-    catch (error) {
-        log.logger.error('register service', error)
-    }
+    // }
+    // catch (error) {
+    //     log.logger.error('register service', error)
+    // }
 })
 
 /**

@@ -8,7 +8,9 @@ import ColorComponent from './ColorComponent';
 import ArchiveComponent from './ArchiveComponent';
 import MoreComponent from './MoreComponent';
 import EditNoteComponent from './EditNoteComponent';
-import { deleteNoteLabel, deleteRemind } from '../services/NoteService';
+import { deleteNoteLabel, deleteRemind, getAllNote, getANote } from '../services/NoteService';
+import Cancel from '@material-ui/icons/Close'
+import Reminder from '@material-ui/icons/WatchLaterOutlined'
 
 const theme = createMuiTheme({
     overrides: {
@@ -50,8 +52,32 @@ class DisplayNote extends Component {
             editNote: false,
             open: false,
             display: "block",
-            noteColor: ''
+            noteColor: '',
+            isHover: false,
+            noteType:false
         }
+    }
+
+    getANote = () =>{
+        let getId = {noteId:this.state.id}
+        let data = this.state.data
+        getANote(getId)
+        .then((res)=>{
+            // console.log("get a note",res.data.data[0].title);
+            data['title'] = res.data.data[0].title
+            data['description'] = res.data.data[0].description
+            data['archive'] = res.data.data[0].archive
+            data['trash'] = res.data.data[0].trash
+            data['notelabel'] = res.data.data[0].notelabel
+            data['color'] = res.data.data[0].notecolor
+            data['reminder'] = res.data.data[0].reminder
+
+            console.log("data from note",res.data.data[0].reminder);
+            this.setState({data})            
+        })
+        .catch((error)=>{
+            console.log("error",error);
+        })
     }
 
     handleClickOpen = () => {
@@ -70,14 +96,14 @@ class DisplayNote extends Component {
         this.setState({ display: "block" })
     }
 
-    handleDelete = data => () => {
+    handleDelete = data => async() => {
         let labelData = {
             noteId: this.state.id,
             labelId: data._id
         }
         console.log('data in dis note label', data._id);
 
-        let deletedLabel = deleteNoteLabel(labelData)
+        let deletedLabel = await deleteNoteLabel(labelData)
         console.log("deleted label  ", deletedLabel)
         this.props.getNotes()
     };
@@ -98,8 +124,10 @@ class DisplayNote extends Component {
         let deletedreminder = deleteRemind(Data)
         console.log("deleted label  ", deletedreminder)
         this.props.getNotes()
-    }    
+        // this.getANote()
 
+    } 
+    
     onMouseEnterHandler = () => {
         this.setState({
             isHover: true
@@ -112,6 +140,9 @@ class DisplayNote extends Component {
         });
     }
 
+    dummyFunction = () => {
+
+    }
 
     render() {
         console.log("NOTE DATA in display note ", this.props.noteData.notelabel)
@@ -121,41 +152,46 @@ class DisplayNote extends Component {
                     key={index}
                     label={key.label}
                     onDelete={this.handleDelete(key)}
+                    deleteIcon={<Cancel style={{width:"18px",height:"18px"}}/>}
                     style={{
-                        height: "20px", minWidth: "100px"
+                        height: "20px", maxWidth: "100px"
                     }}
                 />
             )
         })
 
         const displayReminder = this.props.noteData.reminder.map((key, index) => {
+            console.log("reminders in display",this.props.noteData.reminder);
+            
+            if(this.props.noteData.reminder.length > 0 && this.props.noteData.reminder[0] !== null){
+                let date = this.props.noteData.reminder
+                date =  Date.parse(date)
+                date = new Date(date)                
             return (
                 <Chip
+                    icon={<Reminder style={{width:"18px",height:"18px"}}/>}
                     key={index}
-                    label={key}
+                    label={date.toLocaleString()}
                     onDelete={this.deleteReminder(key)}
+                    deleteIcon={<Cancel style={{width:"18px",height:"18px"}}/>}
                     style={{
-                        height: "20px", minWidth: "100px"
+                        height: "23px", minWidth: "100px"
                     }}
                 />
-            )
+            )}
         })
 
         return (
-            <div>
+            <div className="note" >
                 {!this.state.open || this.state.data.trash ?
                     <MuiThemeProvider theme={theme}>
-                        <Card id={this.props.viewCss} style={{ display: this.state.display, background: this.state.data.color }}>
-                            <div className="note-text-div" >
+                        <Card id={this.props.viewCss} style={{ display: this.state.display ,background: this.state.data.color}}>
+                            <div className="note-text-div"  style={{ background: this.state.data.color }}>
                                 <div className="title-div" onClick={() => this.handleClickOpen()} >
-                                    <CardContent style={{ paddingLeft: "0px" }}>
                                         {this.state.data.title}
-                                    </CardContent>
                                 </div>
                                 <div className="desc-div" onClick={() => this.handleClickOpen()} >
-                                    <CardContent style={{ padding: "0.50px" }}>
                                         {this.state.data.description}
-                                    </CardContent>
                                 </div>
                             </div>
                             <div className="label-div" >
@@ -165,23 +201,24 @@ class DisplayNote extends Component {
                                 {displayReminder}
                             </div>
 
-                            <div className="Icon-div" >
-                                <CardActions>
-                                    {!this.state.data.trash ?
-                                        <CardActions>
+                            <div className="icon-div">
+                               <span className="icon-all-span">
 
+                                    {!this.state.data.trash ?
+                                        <span className="span-icon">
                                             <ReminderComponent
                                                 getNotes={this.props.getNotes}
                                                 id={this.state.id} />
-
+        
                                             <ColorComponent
                                                 selectColor={this.selectColor}
                                                 id={this.state.id}
+                                                getANote={this.getANote}
                                             />
+
                                             <ArchiveComponent changeDisplay={this.changeDisplay} id={this.state.id} archive={this.state.data.archive}
-                                            // handleGetNotes={this.handleGetALLNotes}
                                             />
-                                        </CardActions>
+                                            </span>
                                         :
                                         null
                                     }
@@ -190,14 +227,18 @@ class DisplayNote extends Component {
                                         noteState={this.state}
                                         getNotes={this.props.getNotes}
                                         labels={this.props.labelData}
-                                    />
-                                </CardActions>
+                                        NoteType={this.state.noteType}
+                                        addLabel={this.dummyFunction}
+                                        deleteLabel={this.dummyFunction}
+                                        getLabels={this.props.getLabels}
+                                        />
+                                    </span>
                             </div>
                         </Card>
                     </MuiThemeProvider>
                     :
                     <EditNoteComponent
-                        open={this.state.open}
+                        // open={this.state.open}
                         handleClose={this.handleClose}
                         parentState={this.state}
                         changeDisplay={this.changeDisplay}

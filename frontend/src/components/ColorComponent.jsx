@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
 import ColorIcon from '@material-ui/icons/ColorLensOutlined';
-import { Tooltip, IconButton, MenuItem, Menu, Grid, Avatar } from '@material-ui/core';
+import { Tooltip, IconButton, MenuItem, Menu, Grid, Avatar, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { height } from '@material-ui/system';
 import { updateColor } from '../services/NoteService';
 
+    const theme = createMuiTheme({
+        overrides: {
+            MuiMenu: {
+                paper: {
+                    "height": "auto",
+                    "width": "139px",
+                    "borderRadius":"24px"
+                }
+            }
+        }
+    })
+    
 class ColorComponent extends Component {
     constructor(props) {
         super(props);
@@ -38,6 +50,8 @@ class ColorComponent extends Component {
         this.props.selectColor(color)
         console.log('color in color comp', this.state.selected)
         
+        // this.props.getANote()
+
     }
 
     handleClose = () => {
@@ -53,6 +67,7 @@ class ColorComponent extends Component {
             updateColor(colorData)
                 .then((response) => {
                     console.log('color response', response);
+                    this.props.getANote()
                 })
                 .catch((error) => {
                     console.log('color error', error);
@@ -85,9 +100,10 @@ class ColorComponent extends Component {
                         aria-haspopup="true"
                         onClick={this.handleColor}
                     >
-                        <ColorIcon style={{ width: "17px" }} />
+                        <ColorIcon style={{  height: "15px",width:" 15px"}} />
                     </IconButton>
                 </Tooltip>
+                <MuiThemeProvider theme={theme}>
                 <Menu
                     id="color-menu"
                     anchorEl={this.state.anchorEl}
@@ -95,10 +111,11 @@ class ColorComponent extends Component {
                     onClose={this.handleClose}
                     style={{ width: "100%" }}
                 >
-                    <Grid style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
+                    <Grid style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start",padding:"5px" }}>
                         {color}
                     </Grid>
                 </Menu>
+                </MuiThemeProvider>
             </div>
         );
     }

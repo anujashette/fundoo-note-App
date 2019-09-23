@@ -22,6 +22,27 @@ export function getAllNote() {
         })
 }
 
+export function getANote(data) {
+    console.log("note data", loginToken)
+    return axios.post(url + `/note/readnote?pageNo=${1}&size=${20}`,data,
+        {
+            headers: {
+                token: loginToken
+            }
+        })
+}
+
+
+export function getLatestNote() {
+    console.log("latest note data", loginToken)
+    return axios.post(url + `/note/latestnotes`,{},
+        {
+            headers: {
+                token: loginToken
+            }
+        })
+}
+
 export function getNoteCount() {
     console.log("note count")
     return axios.post(url + `/note/countnotes`,{},
@@ -34,14 +55,13 @@ export function getNoteCount() {
 
 export function getSearchNote(searchData) {
     console.log("note search", loginToken)
-    return axios.post(url + `/note/readnote?pageNo=${1}&size=${20}`,searchData,
+    return axios.post(url + `/note/searchnotes?pageNo=${1}&size=${20}`,searchData,
         {
             headers: {
                 token: loginToken
             }
         })
 }
-
 
 export function getArchive() {
     console.log("archive note data", loginToken)
@@ -211,19 +231,11 @@ export function deleteNote(deleteId) {
 
 export function addLabel(labelData) {
     console.log('add label', labelData)
-    let response = {}
-    axios.post(url + `/label/createlabel`, labelData, {
+    return axios.post(url + `/label/createlabel`, labelData, {
         headers: {
             token: loginToken
         }
-    }).then((addLabelRes) => {
-        console.log('add label', addLabelRes)
-        response = addLabelRes;
     })
-        .catch((error) => {
-            response = error;
-        })
-    return response
 }
 
 export function getAllLabel() {

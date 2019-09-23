@@ -5,11 +5,16 @@ import ColorComponent from './ColorComponent';
 import ArchiveComponent from './ArchiveComponent';
 import MoreComponent from './MoreComponent';
 import { updateTitle, updateDescription, deleteNoteLabel, deleteRemind } from '../services/NoteService'
+import '../Css/displayNote.scss'
+import Cancel from '@material-ui/icons/Close'
+import Reminder from '@material-ui/icons/WatchLaterOutlined'
+
 const theme = createMuiTheme({
   overrides: {
     MuiDialog: {
       paperWidthSm: {
         "max-width": " 635px",
+        "height": "auto",
         "border-radius": "10px"
       }
     }
@@ -77,49 +82,57 @@ class EditNoteComponent extends Component {
     this.props.getNotes()
   };
 
-
   deleteReminder = data => () => {
     let Data = {
-        noteId: this.state.id
+      noteId: this.state.id
     }
     console.log('data in dis note label', data._id);
     let deletedreminder = deleteRemind(Data)
     console.log("deleted label  ", deletedreminder)
     this.props.getNotes()
-}
+  }
 
   render() {
     const displayLabel = this.state.data.notelabel.map((key, index) => {
-      return (
-        <Chip
-          key={index}
-          label={key.label}
-          onDelete={this.handleDelete(key)}
-          style={{
-            height: "20px", minWidth: "100px"
-          }}
-        />
-      )
+      if (this.state.data.notelabel) {
+        return (
+          <Chip
+            key={index}
+            label={key.label}
+            onDelete={this.handleDelete(key)}
+            style={{
+              height: "20px", minWidth: "100px"
+            }}
+          />
+        )
+      }
     })
 
     const displayReminder = this.state.data.reminder.map((key, index) => {
-      return (
-        <Chip
-          key={index}
-          label={key}
-          onDelete={this.deleteReminder(key)}
-          style={{
-            height: "20px", minWidth: "100px"
-          }}
-        />
-      )
+      if (this.state.data.reminder.length > 0 && this.state.data.reminder[0] !== '') {
+        let date = this.state.data.reminder
+        date = Date.parse(date)
+        date = new Date(date)
+        return (
+          <Chip
+            icon={<Reminder style={{ width: "18px", height: "18px" }} />}
+            key={index}
+            label={date.toLocaleString()}
+            onDelete={this.deleteReminder(key)}
+            deleteIcon={<Cancel style={{ width: "18px", height: "18px" }} />}
+            style={{
+              height: "20px", minWidth: "100px"
+            }}
+          />
+        )
+      }
     })
 
     return (
       <div>
         <MuiThemeProvider theme={theme}>
           <Dialog
-            open={this.props.open}
+            open={this.state.open}
             onClose={this.props.handleClose}
             aria-labelledby="form-dialog-title"
           >
@@ -158,10 +171,10 @@ class EditNoteComponent extends Component {
                   <div className="label-div" >
                     {displayReminder}
                   </div>
-                  <div className="Icon-div">
+                  <div className="Icon-div-edit">
 
                     <ReminderComponent id={this.state.id} getNotes={this.props.getNotes} />
-                    <ColorComponent selectColor={this.selectColor} id = {this.state.id}/>
+                    <ColorComponent selectColor={this.selectColor} id={this.state.id} />
                     <ArchiveComponent parentState={this.state} handleGetNotes={this.props.handleGetNotes} />
                     <MoreComponent
                       changeDisplay={this.props.changeDisplay}
