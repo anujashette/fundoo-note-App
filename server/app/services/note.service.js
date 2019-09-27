@@ -48,9 +48,9 @@ NoteService.prototype.readNoteServ = async (param) => {
 
     let readResponse = {}
     let readParam = {}
-    readParam.query = { $and: [{ "userId": param.userId }, { 'trash': false, 'archive': false }] }, {}, param.query
+    readParam.query = { $and: [{ "userId": param.userId }, { 'trash': false, 'archive': false }] }
     // await getData.getCacheData('readAllBy' + JSON.stringify(param.field))
-    //     .then((reply) => {
+    //     .then((reply) => {  , {}, param.query
     //         console.log('reply--->', reply);
     //         readResponse.data = JSON.parse(reply)
     //     })

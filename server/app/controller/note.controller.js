@@ -74,7 +74,6 @@ NoteController.prototype.readNoteController = async (req, res) => {
         let readNoteRes = await noteServObj.readNoteServ(param)
         console.log("note read controller", readNoteRes);
         return res.status(200).send(readNoteRes)
-
     }
     catch (err) {
         log.logger.error('read Note==>', err)
@@ -467,17 +466,17 @@ NoteController.prototype.latestNotes = async (req, res) => {
             async.waterfall([
                 async function () {
                     let latestNotes = await noteServObj.latestNotes(param)
-                    console.log("1 function", latestNotes.data);
+                    console.log("1 function", latestNotes);
                     return latestNotes
                 },
-                async function (latestNotes) {
+               async function (latestNotes) {
                     console.log("callback notes", latestNotes);
                     param = {
                         userId: req.token.payload.id,
                         notes: latestNotes.data.readData
                     }
-                    redisObj.setData(client, param)
-                    return latestNotes;
+                  redisObj.setData(client, param)
+                  return latestNotes;
                 }
             ], function (err, latestNotes) {
                 console.log("response to browser", latestNotes);

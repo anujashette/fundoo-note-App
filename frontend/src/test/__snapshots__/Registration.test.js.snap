@@ -1,0 +1,161 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginComponent Should validated input fields 1`] = `
+Array [
+  <div>
+    <ForwardRef(WithStyles)
+      anchorOrigin={
+        Object {
+          "horizontal": "center",
+          "vertical": "top",
+        }
+      }
+      autoHideDuration={4000}
+      message={
+        <span
+          id="message-id"
+        >
+          
+        </span>
+      }
+      onClose={[Function]}
+      open={false}
+    />
+    <ForwardRef(WithStyles)
+      id="cardid"
+    >
+      <ForwardRef(WithStyles)>
+        <ForwardRef(WithStyles)
+          variant="h5"
+        >
+          <span
+            className="font-color"
+          >
+            F
+          </span>
+          <span
+            className="font-color"
+          >
+            u
+          </span>
+          <span
+            className="font-color"
+          >
+            n
+          </span>
+          <span
+            className="font-color"
+          >
+            d
+          </span>
+          <span
+            className="font-color"
+          >
+            o
+          </span>
+          <span
+            className="font-color"
+          >
+            o
+          </span>
+        </ForwardRef(WithStyles)>
+        <ForwardRef(WithStyles)
+          component="h2"
+          variant="h5"
+        >
+          Create your Fundoo Account
+        </ForwardRef(WithStyles)>
+        <br />
+        <ValidatorForm
+          autoComplete="off"
+          debounceTime={0}
+          onError={[Function]}
+          onSubmit={[Function]}
+        >
+          <div
+            className="NameText"
+          >
+            <ForwardRef(WithStyles)
+              className="FName"
+              label="First name"
+              name="firstname"
+              onChange={[Function]}
+              required={true}
+              value=""
+            />
+            <ForwardRef(WithStyles)
+              className="FName"
+              label="Last name"
+              name="lastname"
+              onChange={[Function]}
+              required={true}
+              value=""
+            />
+          </div>
+          <br />
+          <TextValidator
+            className="Email"
+            errorMessages={
+              Array [
+                "this field is required",
+                "email is not valid",
+              ]
+            }
+            label="Email"
+            name="email"
+            onChange={[Function]}
+            validatorListener={[Function]}
+            validators={
+              Array [
+                "required",
+                "isEmail",
+              ]
+            }
+            value=""
+          />
+          <br />
+          <br />
+          <TextValidator
+            className="Password"
+            errorMessages={
+              Array [
+                "this field is required",
+              ]
+            }
+            label="Password"
+            name="password"
+            onChange={[Function]}
+            type="password"
+            validatorListener={[Function]}
+            validators={
+              Array [
+                "required",
+              ]
+            }
+            value=""
+          />
+          <br />
+          <br />
+          <div
+            className="Button"
+          >
+            <button
+              className="login-button-letter"
+              onClick={[Function]}
+            >
+              Sign in instead
+            </button>
+            <button
+              className="button-letter"
+              onClick={[Function]}
+              type="submit"
+            >
+              Signup
+            </button>
+          </div>
+        </ValidatorForm>
+      </ForwardRef(WithStyles)>
+    </ForwardRef(WithStyles)>
+  </div>,
+]
+`;

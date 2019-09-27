@@ -33,7 +33,6 @@ let currentDate = new Date()
 currentDate = JSON.stringify(currentDate)
 currentDate = JSON.parse(currentDate)
 currentDate = new Date(currentDate)
-console.log("current date", currentDate);
 
 class DisplayNote extends Component {
     constructor(props) {
@@ -147,6 +146,8 @@ class DisplayNote extends Component {
     render() {
         console.log("NOTE DATA in display note ", this.props.noteData.notelabel)
         const displayLabel = this.props.noteData.notelabel.map((key, index) => {
+            console.log("label undefined=====================================>",key);
+            if(key !== null){
             return (
                 <Chip
                     key={index}
@@ -157,7 +158,7 @@ class DisplayNote extends Component {
                         height: "20px", maxWidth: "100px"
                     }}
                 />
-            )
+            )}
         })
 
         const displayReminder = this.props.noteData.reminder.map((key, index) => {

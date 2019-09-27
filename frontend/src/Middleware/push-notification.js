@@ -3,8 +3,6 @@ import { firebaseToken } from '../services/NoteService';
 import config from '../config'
 import {} from 'dotenv/config'
 
-console.log("config sender ID",process.env.REACT_APP_senderId);
-
 export const initializeFirebase = () => {
   firebase.initializeApp({
     messagingSenderId: config.senderId

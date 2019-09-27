@@ -7,7 +7,7 @@ let should = chai.should();
 let fs = require('fs')
 
 chai.use(chaiHttp);
-filePath = path.join(`${__dirname}/data.json`);chai.use(chaiHttp);
+let filePath = path.join(`${__dirname}/data.json`);
 var data = fs.readFileSync(filePath)
 data = JSON.parse(data)
 

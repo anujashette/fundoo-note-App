@@ -169,7 +169,6 @@ User.prototype.login = async (body) => {
             response.status = false,
             response.message = 'Account is not exist'
         }
-
         return response
     }
     catch (err) {

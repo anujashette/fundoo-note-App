@@ -80,11 +80,11 @@ Note.prototype.create = async (addField, userId) => {
             notelabel: addField.notelabel
         })
 
-        let note = await addNote.save()
+        let saveNote = await addNote.save()
         // await client.set('note' + note.id, JSON.stringify(note), redis.print)
-        console.log('des in model====>', note);
+        console.log('des in model====>', saveNote);
 
-        return note
+        return saveNote
     }
     catch (err) {
         log.logger.error('Create Note error==>', err)

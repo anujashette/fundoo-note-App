@@ -32,7 +32,7 @@ exports.isAuthorized = (async function (req,res,next) {
     try {
         if (!userToken) {
             response.message = 'token is not provided'
-            return response
+            return res.status(401).send(response) 
         }
         else {
            var decoded = await jwt.verify(userToken, process.env.jwtsecret)    // jwtsectrete contains secrete value

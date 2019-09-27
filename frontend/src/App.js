@@ -9,7 +9,6 @@ import DashboardPage from './pages/DashboardPage';
 
 class App extends React.Component {
   render() {
-    console.log('app js',localStorage.getItem('LoginToken'));
     
     return (
       <div className="App">

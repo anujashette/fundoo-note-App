@@ -15,6 +15,10 @@ import List from '../assets/list.svg'
 import Cancel from '@material-ui/icons/Close'
 import ChartComponent from './chartComponent';
 
+
+let dsasa='ssds';
+
+
 class AppBarComponent extends Component {
 
     constructor(props) {
@@ -27,7 +31,7 @@ class AppBarComponent extends Component {
             noteData: [],
             firstPage:1,
             lastPage:1,
-            searchKey:'',
+            searchKey:"",
             chartstate:false
         };
     }
@@ -47,7 +51,7 @@ class AppBarComponent extends Component {
     };
 
     handleGrid = () => {
-        console.log('grid state',this.state.gridview);
+        console.log("grid state",this.state.gridview);
         
         this.setState({
             gridview: !this.state.gridview,
@@ -62,11 +66,9 @@ class AppBarComponent extends Component {
 
     }
     handleSearch = () =>{
-        console.log('handle change',this.state.searchKey)
+        console.log("handle change",this.state.searchKey)
         this.props.searchNotes(this.state.searchKey)
     }
-
-
 
     render() {
 
